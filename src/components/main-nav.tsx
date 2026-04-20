@@ -7,14 +7,22 @@ import { navLinks } from "@/lib/site-data";
 
 type MainNavProps = {
   mobile?: boolean;
+  onNavigate?: () => void;
+  excludeHrefs?: string[];
 };
 
-export function MainNav({ mobile = false }: MainNavProps) {
+export function MainNav({
+  mobile = false,
+  onNavigate,
+  excludeHrefs = [],
+}: MainNavProps) {
   const pathname = usePathname();
 
   return (
     <>
-      {navLinks.map((link) => {
+      {navLinks
+        .filter((link) => !excludeHrefs.includes(link.href))
+        .map((link) => {
         const isActive =
           link.href === "/"
             ? pathname === link.href
@@ -24,10 +32,11 @@ export function MainNav({ mobile = false }: MainNavProps) {
           <Link
             key={link.href}
             href={link.href}
+            onClick={onNavigate}
             aria-current={isActive ? "page" : undefined}
             className={
               mobile
-                ? `whitespace-nowrap text-sm font-medium transition ${
+                ? `whitespace-nowrap text-[20px] font-medium transition ${
                     isActive
                       ? "text-[var(--brand-primary)]"
                       : "text-[rgba(11,31,94,0.82)] transition-all duration-[250ms] hover:-translate-y-px hover:text-[var(--brand-primary)]"

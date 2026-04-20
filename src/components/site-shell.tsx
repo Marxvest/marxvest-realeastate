@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import { signOutAction } from "@/actions/auth";
 import { BrandLogo } from "@/components/brand-logo";
 import { MainNav } from "@/components/main-nav";
+import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
 import { getSession } from "@/lib/auth";
 import { company, navLinks } from "@/lib/site-data";
@@ -27,52 +28,52 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
       className={`${bodyFont.variable} ${displayFont.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:6.5rem] lg:[--sticky-shell-height:6.5rem]">
+      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:4.75rem] lg:[--sticky-shell-height:4.5rem]">
         <div className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[rgba(255,255,255,0.72)] backdrop-blur-md">
           <header>
-            <div className="mx-auto flex h-[4.5rem] w-[min(1200px,calc(100vw-2rem))] items-center gap-5">
-              <BrandLogo compact className="shrink-0" />
+            <div className="mx-auto flex h-[4.75rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.5rem] lg:justify-start lg:gap-5">
+              <BrandLogo compact className="min-w-0 shrink-0" />
               <nav className="hidden flex-1 items-center justify-center gap-7 lg:flex">
                 <MainNav />
               </nav>
-              <div className="ml-auto flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 lg:ml-auto">
                 {session ? (
                   <>
-                    {session.role === "admin" ? (
-                      <Link
-                        href="/admin"
-                        className="hidden rounded-full border border-[var(--brand-border-strong)] px-3.5 py-1.5 text-[0.88rem] font-semibold text-[var(--brand-text)] sm:inline-flex"
-                      >
-                        Admin
-                      </Link>
-                    ) : null}
-                    <form action={signOutAction}>
-                      <button
-                        type="submit"
-                        className="rounded-full bg-[var(--brand-primary)] px-3.5 py-1.5 text-[0.88rem] font-semibold text-white transition hover:bg-[var(--brand-primary-dark)]"
-                      >
-                        Sign out
-                      </button>
-                    </form>
+                    <div className="hidden items-center gap-3 lg:flex">
+                      {session.role === "admin" ? (
+                        <Link
+                          href="/admin"
+                          className="rounded-full border border-[var(--brand-border-strong)] px-3.5 py-1.5 text-[0.88rem] font-semibold text-[var(--brand-text)]"
+                        >
+                          Admin
+                        </Link>
+                      ) : null}
+                      <form action={signOutAction}>
+                        <button
+                          type="submit"
+                          className="rounded-full bg-[var(--brand-primary)] px-3.5 py-1.5 text-[0.88rem] font-semibold text-white transition hover:bg-[var(--brand-primary-dark)]"
+                        >
+                          Sign out
+                        </button>
+                      </form>
+                    </div>
+                    <MobileNavMenu sessionRole={session.role} />
                   </>
-                  ) : (
+                ) : (
+                  <>
                     <Link
                       href="/contact"
-                      className="inline-flex h-12 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-5 text-[0.76rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_14px_30px_rgba(7,18,45,0.18),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_18px_38px_rgba(7,18,45,0.24),inset_0_1px_0_rgba(255,255,255,0.16)]"
+                      className="hidden h-12 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-5 text-[0.76rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_14px_30px_rgba(7,18,45,0.18),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_18px_38px_rgba(7,18,45,0.24),inset_0_1px_0_rgba(255,255,255,0.16)] lg:inline-flex"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-sand)]" />
                       Contact Agent
                     </Link>
-                  )}
+                    <MobileNavMenu />
+                  </>
+                )}
               </div>
             </div>
           </header>
-
-          <div className="mx-auto w-[min(1200px,calc(100vw-2rem))] lg:hidden">
-            <nav className="flex gap-5 overflow-x-auto py-3 text-sm font-medium text-[var(--brand-text-muted)]">
-              <MainNav mobile />
-            </nav>
-          </div>
         </div>
 
         <div className="relative min-h-screen pt-[var(--sticky-shell-height)]">

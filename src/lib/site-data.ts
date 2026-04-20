@@ -39,8 +39,8 @@ export const homepageBanners: Banner[] = [
   {
     id: "launch-banner",
     eyebrow: "Campaign",
-    title: "Q2 Estate release with structured allocation control.",
-    body: "Use campaign banners to spotlight launches, documentation updates, or investor windows without cluttering the hero.",
+    title: "Featured estates with structured payment plans.",
+    body: "Explore prime estates now open for allocation, with clear documentation cues and payment terms that stay easy to compare.",
     ctaLabel: "Browse estates",
     ctaHref: "/listings",
   },

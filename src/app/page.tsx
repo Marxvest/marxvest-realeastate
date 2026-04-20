@@ -37,27 +37,22 @@ const heroTrustMetrics = [
 const heroSlides = [
   {
     src: "/images/hero-image.jpeg",
-    alt: "Marxvest estate visual",
-    objectPosition: "58% center",
-  },
-  {
-    src: "/images/marxvest-hero-image.webp",
-    alt: "Marxvest land investment landscape",
-    objectPosition: "52% center",
+    alt: "Marxvest luxury estate exterior",
+    objectPosition: "62% center",
   },
   {
     src: "/images/gate-house-1.webp",
-    alt: "Marxvest estate gate house view one",
+    alt: "Marxvest gated estate entrance",
     objectPosition: "50% center",
   },
   {
     src: "/images/gate-house-2.webp",
-    alt: "Marxvest estate gate house view two",
+    alt: "Marxvest premium estate entrance view",
     objectPosition: "50% center",
   },
   {
     src: "/images/gate-house-3.webp",
-    alt: "Marxvest estate gate house view three",
+    alt: "Marxvest clean estate architecture entrance",
     objectPosition: "50% center",
   },
 ] as const;
@@ -122,38 +117,39 @@ export default function HomePage() {
         <div className="hero-stage-overlay absolute inset-0" />
         <div className="hero-stage-glow absolute inset-0" />
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100svh-var(--sticky-shell-height))] w-[var(--page-width)] flex-col justify-between gap-5 pt-6 pb-7 sm:pt-8 sm:pb-9 lg:pt-10 lg:pb-10">
+        <div className="relative z-10 mx-auto flex min-h-[calc(80svh-var(--sticky-shell-height))] w-[var(--page-width)] flex-col justify-between gap-4 pt-5 pb-4 sm:min-h-[calc(90svh-var(--sticky-shell-height))] sm:gap-5 sm:pt-7 sm:pb-8 lg:min-h-[calc(100svh-var(--sticky-shell-height))] lg:pt-10 lg:pb-10">
           <div className="max-w-[35rem] pt-1 sm:pt-2">
             <RevealOnScroll from="left">
-              <div className="section-cap !text-[var(--brand-white)] before:!bg-white/48">
+              <div className="section-cap max-w-[92%] !text-[var(--brand-white)] before:!bg-white/48">
                 Documentation-first land acquisition
               </div>
             </RevealOnScroll>
 
             <RevealOnScroll from="left" delayMs={110}>
-              <h1 className="mt-4 max-w-[560px] font-[family-name:var(--font-display)] text-[clamp(2rem,4.1vw,4.2rem)] font-[380] leading-[0.94] tracking-[-0.065em] text-[var(--brand-white)]">
-                Secure Verified Land Investments in Nigeria
+              <h1 className="mt-4 max-w-[92%] font-[family-name:var(--font-display)] text-[clamp(2.125rem,7.8vw,3rem)] font-[360] leading-[0.96] tracking-[-0.04em] text-[var(--brand-white)] sm:max-w-[560px] sm:text-[clamp(2.8rem,4.1vw,4.2rem)] sm:font-[380] sm:leading-[0.94] sm:tracking-[-0.065em]">
+                <span className="block whitespace-nowrap">Secure Verified Land</span>
+                <span className="block whitespace-nowrap">Investments in Nigeria</span>
               </h1>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={170}>
-              <p className="mt-3 max-w-[25rem] text-[0.9rem] leading-6 text-white/82 sm:text-[0.95rem] sm:leading-7">
-                Own government-traceable plots with agent guidance, guided
-                inspections, and full legal documentation.
+              <p className="mt-4 max-w-[95%] text-[1.0625rem] leading-[1.55] text-white/82 sm:mt-3 sm:max-w-[25rem] sm:text-[0.95rem] sm:leading-7">
+                Traceable plots, guided inspections, and flexible payment
+                options backed by full legal documentation.
               </p>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={220}>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-[22px] flex flex-col gap-[14px] sm:mt-5 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href="/booking"
-                  className="inline-flex h-14 min-w-[12rem] items-center justify-center rounded-full bg-[linear-gradient(135deg,#E9D9BD,#D8BE93)] px-7 text-sm font-semibold text-[var(--brand-text)] shadow-[0_10px_30px_rgba(216,190,147,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(212,175,55,0.25)] hover:brightness-[1.03]"
+                  className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#E9D9BD,#D8BE93)] px-6 text-[17px] font-semibold text-[var(--brand-text)] shadow-[0_10px_30px_rgba(216,190,147,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(212,175,55,0.25)] hover:brightness-[1.03] sm:w-auto sm:min-w-[12rem] sm:px-7 sm:text-sm"
                 >
                   Book Inspection
                 </Link>
                 <Link
                   href="/listings"
-                  className="inline-flex h-14 min-w-[11rem] items-center justify-center rounded-full border border-[var(--brand-glass-border)] bg-white/7 px-7 text-sm font-semibold text-[var(--brand-white)] backdrop-blur-md transition hover:bg-white/12"
+                  className="inline-flex h-14 w-full items-center justify-center rounded-full border border-[var(--brand-glass-border)] bg-white/7 px-6 text-[17px] font-semibold text-[var(--brand-white)] backdrop-blur-md transition hover:bg-white/12 sm:w-auto sm:min-w-[11rem] sm:px-7 sm:text-sm"
                 >
                   View Estates
                 </Link>
@@ -161,12 +157,22 @@ export default function HomePage() {
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={260}>
+              <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[0.69rem] font-medium text-white/72">
+                <span>No hidden charges</span>
+                <span className="text-white/42">•</span>
+                <span>Verified titles</span>
+                <span className="text-white/42">•</span>
+                <span>Guided inspection</span>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll from="up" delayMs={280}>
               <p className="mt-4 text-[0.78rem] font-medium uppercase tracking-[0.2em] text-white/58">
                 Trusted by 100+ clients nationwide
               </p>
             </RevealOnScroll>
 
-            <RevealOnScroll from="up" delayMs={300}>
+            <RevealOnScroll from="up" delayMs={320}>
               <a
                 href={`https://wa.me/${company.whatsappNumber}?text=${encodeURIComponent(
                   "Hello Marxvest, I want to speak with your team about available land.",
@@ -182,16 +188,16 @@ export default function HomePage() {
           </div>
 
           <RevealOnScroll from="up" delayMs={340}>
-            <div className="hero-proof-band grid overflow-hidden rounded-[1.25rem] sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
               {heroTrustMetrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className="hero-proof-item px-4 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-6"
+                  className="hero-proof-band rounded-[1.1rem] px-4 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-6"
                 >
                   <div className="font-[family-name:var(--font-display)] text-[clamp(2.1rem,3vw,2.625rem)] font-[700] leading-none tracking-[-0.04em] text-white/95">
                     {metric.value}
                   </div>
-                  <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/62">
+                  <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/62">
                     {metric.label}
                   </div>
                 </div>
