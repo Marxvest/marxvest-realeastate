@@ -211,7 +211,7 @@ export default function HomePage() {
 
             <RevealOnScroll from="up" delayMs={170}>
               <p className="mt-8 max-w-[94%] text-[17px] font-normal leading-[1.55] text-white/90 sm:mt-3 sm:max-w-[25rem] sm:text-[0.95rem] sm:leading-7 sm:text-white/82">
-                Traceable plots, guided inspections, flexible payments.
+                Traceable plot | guided inspections | flexible payments.
               </p>
             </RevealOnScroll>
 
