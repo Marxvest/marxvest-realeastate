@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
 import { signOutAction } from "@/actions/auth";
+import { BackToTopButton } from "@/components/back-to-top-button";
 import { BrandLogo } from "@/components/brand-logo";
 import { MainNav } from "@/components/main-nav";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
@@ -125,6 +126,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <WhatsAppWidget />
+          <BackToTopButton />
         </div>
       </body>
     </html>

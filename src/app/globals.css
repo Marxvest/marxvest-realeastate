@@ -99,7 +99,7 @@ select {
 .hero-stage-overlay {
   z-index: 2;
   background:
-    linear-gradient(90deg, #07122d 0%, rgba(7, 18, 45, 0.76) 38%, rgba(7, 18, 45, 0.42) 60%, rgba(7, 18, 45, 0.08) 82%, transparent 100%),
+    linear-gradient(90deg, #081b4b 0%, rgba(8, 27, 75, 0.72) 45%, transparent 100%),
     linear-gradient(180deg, rgba(5, 11, 24, 0.16) 0%, rgba(5, 11, 24, 0.1) 54%, rgba(5, 11, 24, 0.78) 100%);
 }
 
