@@ -11,10 +11,9 @@ export function BackToTopButton() {
     const updateVisibility = () => {
       frame = 0;
 
-      const hero = document.querySelector<HTMLElement>(".hero-stage");
-      const threshold = hero
-        ? hero.offsetTop + hero.offsetHeight * 0.88
-        : window.innerHeight * 0.88;
+      const scrollableDistance =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const threshold = scrollableDistance * 0.6;
 
       setIsVisible(window.scrollY > threshold);
     };

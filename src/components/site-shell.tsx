@@ -29,10 +29,10 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
       className={`${bodyFont.variable} ${displayFont.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:4.75rem] lg:[--sticky-shell-height:4.5rem]">
+      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:5.15rem] lg:[--sticky-shell-height:4.75rem]">
         <div className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[rgba(255,255,255,0.72)] backdrop-blur-md">
           <header>
-            <div className="mx-auto flex h-[4.75rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.5rem] lg:justify-start lg:gap-5">
+            <div className="mx-auto flex h-[5.15rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.75rem] lg:justify-start lg:gap-5">
               <BrandLogo compact className="min-w-0 shrink-0" />
               <nav className="hidden flex-1 items-center justify-center gap-7 lg:flex">
                 <MainNav />

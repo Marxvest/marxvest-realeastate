@@ -35,15 +35,15 @@ export function MobileNavMenu({ sessionRole }: MobileNavMenuProps) {
       </button>
 
       {isOpen ? (
-        <div className="fixed inset-0 z-40 bg-[rgba(7,18,45,0.34)] backdrop-blur-[2px]">
-          <button
-            type="button"
-            aria-label="Close navigation menu overlay"
-            onClick={() => setIsOpen(false)}
-            className="absolute inset-0"
-          />
-
-          <div className="absolute right-0 top-0 flex h-[100svh] w-[78%] max-w-[21rem] flex-col border-l border-black/5 bg-white px-6 pb-8 pt-[5.75rem] shadow-[-20px_0_60px_rgba(0,0,0,0.12)]">
+        <div
+          className="fixed inset-0 z-[60] bg-[rgba(7,18,45,0.34)] backdrop-blur-[2px]"
+          onClick={() => setIsOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="absolute right-0 top-0 flex h-[100svh] w-[78%] max-w-[21rem] flex-col border-l border-black/5 bg-white px-6 pb-8 pt-[5.75rem] shadow-[-20px_0_60px_rgba(0,0,0,0.12)]"
+            onClick={(event) => event.stopPropagation()}
+          >
             <nav className="grid gap-6 text-[20px] font-medium text-[var(--brand-text)]">
               <MainNav
                 mobile

@@ -9,36 +9,110 @@ import {
   featuredListings,
   homepageAbout,
   homepageBanners,
+  homepageFaqs,
+  homepageProofMoments,
   processSteps,
   serviceHighlights,
   trustPoints,
   trustFramework,
 } from "@/lib/site-data";
 
-const heroTrustMetrics = [
+const heroTrustBadges = [
   {
-    label: "Clients",
-    value: "100+",
+    label: "CAC Registered",
+    mobileLabel: "CAC Registered",
+    icon: "shield",
   },
   {
-    label: "Estates",
-    value: "3+",
+    label: "Verified Titles",
+    mobileLabel: "Verified Titles",
+    icon: "document",
   },
   {
-    label: "Partners",
-    value: "50+",
+    label: "100+ Buyers",
+    mobileLabel: "100+ Buyers",
+    icon: "users",
   },
   {
-    label: "Awards",
-    value: "10+",
+    label: "Transparent Pricing",
+    mobileLabel: "Clear Pricing",
+    icon: "tag",
   },
 ] as const;
 
+function HeroTrustIcon({ type }: { type: (typeof heroTrustBadges)[number]["icon"] }) {
+  const commonProps = {
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  if (type === "shield") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+        <path
+          {...commonProps}
+          d="M12 3 5.5 5.4v5.7c0 4.1 2.6 7.8 6.5 9.2 3.9-1.4 6.5-5.1 6.5-9.2V5.4L12 3Z"
+          fill="none"
+        />
+        <path {...commonProps} d="m8.9 11.9 2.1 2.1 4.2-4.4" fill="none" />
+      </svg>
+    );
+  }
+
+  if (type === "document") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+        <path
+          {...commonProps}
+          d="M7 3.8h7l3 3v13.4H7V3.8Z"
+          fill="none"
+        />
+        <path {...commonProps} d="M14 3.8v3h3M9.5 11h5M9.5 14.5h3.5" fill="none" />
+        <path {...commonProps} d="m14.4 17.1 1.3 1.3 2.7-3" fill="none" />
+      </svg>
+    );
+  }
+
+  if (type === "users") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+        <path {...commonProps} d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15.5 11a3 3 0 1 0 0-6" fill="none" />
+        <path {...commonProps} d="M3.5 19.2c.5-3.1 2.3-5 5-5s4.5 1.9 5 5M13 14.4c2.5.2 4.2 1.9 4.7 4.8" fill="none" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+      <path
+        {...commonProps}
+        d="M4.5 12.5 12.8 4H20v7.2l-8.5 8.3-7-7Z"
+        fill="none"
+      />
+      <path {...commonProps} d="M16.8 7.4h.1M9.5 13.3l2 2" fill="none" />
+    </svg>
+  );
+}
+
+function HeroTrustIconFrame({
+  type,
+}: {
+  type: (typeof heroTrustBadges)[number]["icon"];
+}) {
+  return (
+    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[rgba(229,208,166,0.48)] bg-[rgba(229,208,166,0.22)] text-[#F4D892] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_8px_20px_rgba(0,0,0,0.12)]">
+      <HeroTrustIcon type={type} />
+    </span>
+  );
+}
+
 const heroSlides = [
   {
-    src: "/images/hero-image.jpeg",
-    alt: "Marxvest luxury estate exterior",
-    objectPosition: "62% center",
+    src: "/images/gate-house-2.webp",
+    alt: "Marxvest premium estate entrance view",
+    objectPosition: "50% center",
   },
   {
     src: "/images/gate-house-1.webp",
@@ -46,14 +120,14 @@ const heroSlides = [
     objectPosition: "50% center",
   },
   {
-    src: "/images/gate-house-2.webp",
-    alt: "Marxvest premium estate entrance view",
-    objectPosition: "50% center",
-  },
-  {
     src: "/images/gate-house-3.webp",
     alt: "Marxvest clean estate architecture entrance",
     objectPosition: "50% center",
+  },
+  {
+    src: "/images/hero-image.jpeg",
+    alt: "Marxvest luxury estate exterior",
+    objectPosition: "52% center",
   },
 ] as const;
 
@@ -117,8 +191,8 @@ export default function HomePage() {
         <div className="hero-stage-overlay absolute inset-0" />
         <div className="hero-stage-glow absolute inset-0" />
 
-        <div className="relative z-10 mx-auto flex min-h-[82svh] w-[var(--page-width)] flex-col justify-center gap-[14px] pt-[22px] pb-[18px] sm:min-h-[calc(90svh-var(--sticky-shell-height))] sm:justify-between sm:gap-5 sm:pt-7 sm:pb-8 lg:min-h-[calc(100svh-var(--sticky-shell-height))] lg:pt-10 lg:pb-10">
-          <div className="flex min-h-[calc(82svh-var(--sticky-shell-height)-36px)] max-w-[35rem] flex-col justify-between pt-1 sm:block sm:min-h-0 sm:pt-2">
+        <div className="relative z-10 mx-auto flex min-h-[80svh] w-[var(--page-width)] flex-col justify-start gap-[14px] pt-10 pb-5 sm:min-h-[calc(90svh-var(--sticky-shell-height))] sm:justify-between sm:gap-5 sm:pt-7 sm:pb-8 lg:min-h-[calc(100svh-var(--sticky-shell-height))] lg:pt-10 lg:pb-10">
+          <div className="max-w-[35rem] pt-0 sm:block sm:min-h-0 sm:pt-2">
             <RevealOnScroll from="left">
               <div className="section-cap max-w-[92%] !text-[var(--brand-white)] before:!bg-white/48">
                 Documentation-first land acquisition
@@ -126,30 +200,33 @@ export default function HomePage() {
             </RevealOnScroll>
 
             <RevealOnScroll from="left" delayMs={110}>
-              <h1 className="mt-5 max-w-[92%] font-[family-name:var(--font-body)] text-[clamp(2rem,7.4vw,2.85rem)] font-semibold leading-[0.96] tracking-[-0.045em] text-[var(--brand-white)] sm:mt-4 sm:max-w-[560px] sm:font-[family-name:var(--font-display)] sm:text-[clamp(2.8rem,4.1vw,4.2rem)] sm:font-[380] sm:leading-[0.94] sm:tracking-[-0.065em]">
-                <span className="block whitespace-nowrap">Secure Verified Land</span>
-                <span className="block whitespace-nowrap">Investments in Nigeria</span>
+              <h1 className="mt-8 max-w-full font-[family-name:var(--font-body)] text-[clamp(1.72rem,6.7vw,2.45rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--brand-white)] sm:mt-4 sm:max-w-[560px] sm:font-[family-name:var(--font-display)] sm:text-[clamp(2.8rem,4.1vw,4.2rem)] sm:font-[380] sm:leading-[0.94] sm:tracking-[-0.065em]">
+                <span className="block whitespace-nowrap">Buy Verified Land</span>
+                <span className="block whitespace-nowrap">in Nigeria With</span>
+                <span className="block whitespace-nowrap text-[var(--brand-sand)]">
+                  Confidence
+                </span>
               </h1>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={170}>
-              <p className="mt-5 max-w-[94%] text-[17px] font-normal leading-[1.55] text-white/90 sm:mt-3 sm:max-w-[25rem] sm:text-[0.95rem] sm:leading-7 sm:text-white/82">
+              <p className="mt-8 max-w-[94%] text-[17px] font-normal leading-[1.55] text-white/90 sm:mt-3 sm:max-w-[25rem] sm:text-[0.95rem] sm:leading-7 sm:text-white/82">
                 Traceable plots, guided inspections, flexible payments.
               </p>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={220}>
-              <div className="mt-6 sm:mt-5">
+              <div className="mt-10 sm:mt-5">
                 <div className="flex w-full overflow-hidden rounded-full border border-[rgba(255,255,255,0.14)] shadow-[0_10px_30px_rgba(6,17,44,0.2)] sm:hidden">
                   <Link
                     href="/booking"
-                    className="inline-flex h-11 flex-1 items-center justify-end whitespace-nowrap bg-[linear-gradient(135deg,#E5D0A6,#D8BE93)] pl-1.5 pr-3 text-right text-[14px] font-semibold text-[var(--brand-text)]"
+                    className="inline-flex h-11 flex-1 items-center justify-end whitespace-nowrap bg-[linear-gradient(135deg,#E5D0A6,#D8BE93)] pl-1.5 pr-3 text-right text-[14px] font-bold text-[var(--brand-text)]"
                   >
                     Book Inspection
                   </Link>
                   <Link
                     href="/listings"
-                    className="inline-flex h-11 flex-1 items-center justify-start whitespace-nowrap border-l border-[rgba(255,255,255,0.14)] bg-[rgba(8,27,75,0.42)] pl-3 pr-1.5 text-left text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-[16px]"
+                    className="inline-flex h-11 flex-1 items-center justify-start whitespace-nowrap border-l border-[rgba(255,255,255,0.18)] bg-[rgba(8,27,75,0.2)] pl-3 pr-1.5 text-left text-[14px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[16px]"
                   >
                     View Estates
                   </Link>
@@ -158,13 +235,13 @@ export default function HomePage() {
                 <div className="hidden sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-[14px]">
                   <Link
                     href="/booking"
-                    className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#E9D9BD,#D8BE93)] px-6 text-[17px] font-semibold text-[var(--brand-text)] shadow-[0_10px_30px_rgba(216,190,147,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(212,175,55,0.25)] hover:brightness-[1.03] sm:w-auto sm:min-w-[12rem] sm:px-7 sm:text-sm"
+                    className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#E9D9BD,#D8BE93)] px-6 text-[17px] font-bold text-[var(--brand-text)] shadow-[0_10px_30px_rgba(216,190,147,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(212,175,55,0.25)] hover:brightness-[1.03] sm:w-auto sm:min-w-[12rem] sm:px-7 sm:text-sm"
                   >
                     Book Inspection
                   </Link>
                   <Link
                     href="/listings"
-                    className="inline-flex h-14 w-full items-center justify-center rounded-full border border-[var(--brand-glass-border)] bg-white/7 px-6 text-[17px] font-semibold text-[var(--brand-white)] backdrop-blur-md transition hover:bg-white/12 sm:w-auto sm:min-w-[11rem] sm:px-7 sm:text-sm"
+                    className="inline-flex h-14 w-full items-center justify-center rounded-full border border-white/28 bg-transparent px-6 text-[17px] font-medium text-[var(--brand-white)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md transition hover:bg-white/8 sm:w-auto sm:min-w-[11rem] sm:px-7 sm:text-sm"
                   >
                     View Estates
                   </Link>
@@ -173,36 +250,22 @@ export default function HomePage() {
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={260}>
-              <div className="mt-3 mb-[18px] flex flex-wrap gap-x-3 gap-y-1 text-[0.69rem] font-medium text-white/72">
-                <span>No hidden charges</span>
-                <span className="text-white/42">•</span>
-                <span>Verified titles</span>
-                <span className="text-white/42">•</span>
-                <span>Guided inspection</span>
-              </div>
-            </RevealOnScroll>
-
-            <RevealOnScroll from="up" delayMs={280}>
-              <p className="mt-8 text-[0.78rem] font-medium uppercase tracking-[0.2em] text-white/58 sm:mt-7">
-                Trusted by 100+ clients nationwide
-              </p>
-            </RevealOnScroll>
-
-            <RevealOnScroll from="up" delayMs={300}>
-              <div className="hero-proof-band mt-6 grid grid-cols-4 overflow-hidden rounded-[1rem] sm:hidden">
-                {heroTrustMetrics.map((metric, index) => (
+              <div className="hero-proof-band mt-10 grid grid-cols-4 overflow-hidden rounded-[0.9rem] border border-white/10 sm:hidden">
+                {heroTrustBadges.map((badge, index) => (
                   <div
-                    key={metric.label}
-                    className={`px-2 py-2.5 text-center ${
-                      index > 0 ? "border-l border-white/10" : ""
+                    key={badge.label}
+                    className={`flex min-h-[3.7rem] items-center justify-center gap-1.5 px-1.5 py-2 text-[var(--brand-sand)] ${
+                      index > 0 ? "border-l border-white/8" : ""
                     }`}
                   >
-                    <div className="font-[family-name:var(--font-body)] text-[1.42rem] font-bold leading-none tracking-[-0.04em] text-white/95">
-                      {metric.value}
-                    </div>
-                    <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/72">
-                      {metric.label}
-                    </div>
+                    <HeroTrustIcon type={badge.icon} />
+                    <span className="text-center text-[9.5px] font-semibold leading-[1.05] tracking-[-0.01em] text-white/88">
+                      {badge.mobileLabel.split(" ").map((word) => (
+                        <span key={word} className="block">
+                          {word}
+                        </span>
+                      ))}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -224,41 +287,23 @@ export default function HomePage() {
           </div>
 
           <RevealOnScroll from="up" delayMs={340}>
-            <div className="hidden gap-3 sm:grid sm:grid-cols-4">
-              {heroTrustMetrics.map((metric) => (
+            <div className="hero-proof-band hidden overflow-hidden rounded-[1.1rem] border border-white/14 sm:grid sm:grid-cols-4">
+              {heroTrustBadges.map((badge, index) => (
                 <div
-                  key={metric.label}
-                  className="hero-proof-band rounded-[1.1rem] px-4 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-6"
+                  key={badge.label}
+                  className={`flex items-center gap-4 px-5 py-5 lg:px-6 ${
+                    index > 0 ? "border-l border-white/10" : ""
+                  }`}
                 >
-                  <div className="font-[family-name:var(--font-display)] text-[clamp(2.1rem,3vw,2.625rem)] font-[700] leading-none tracking-[-0.04em] text-white/95">
-                    {metric.value}
-                  </div>
-                  <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/62">
-                    {metric.label}
+                  <HeroTrustIconFrame type={badge.icon} />
+                  <div className="text-sm font-semibold leading-tight text-white/88">
+                    {badge.label}
                   </div>
                 </div>
               ))}
             </div>
           </RevealOnScroll>
         </div>
-
-        <RevealOnScroll from="up" delayMs={340}>
-          <div className="relative z-10 mx-auto -mt-2 hidden w-[var(--page-width)] grid-cols-2 gap-3 pb-4 sm:hidden">
-            {heroTrustMetrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="hero-proof-band rounded-[1.1rem] px-4 py-4"
-              >
-                <div className="font-[family-name:var(--font-body)] text-[2.2rem] font-bold leading-none tracking-[-0.04em] text-white/95">
-                  {metric.value}
-                </div>
-                <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/62">
-                  {metric.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </RevealOnScroll>
       </section>
 
       <section className="mx-auto mt-6 w-[var(--page-width)] py-8">
@@ -295,7 +340,7 @@ export default function HomePage() {
           <div className="max-w-[54rem]">
             <div className="section-cap">Featured estates</div>
             <h2 className="mt-6 max-w-[52rem] font-[family-name:var(--font-display)] text-[clamp(2.2rem,3.5vw,3.9rem)] font-[360] leading-[0.95] tracking-[-0.055em] text-[var(--brand-text)]">
-              Clearer land opportunities for disciplined buyers.
+              Explore current opportunities.
             </h2>
             <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-8 text-[var(--brand-text-muted)] sm:text-lg">
               Location, plot structure, documentation, and acquisition terms are laid
@@ -397,6 +442,59 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="mx-auto mt-12 w-[var(--page-width)] py-10">
+        <RevealOnScroll from="up">
+          <div className="max-w-[48rem]">
+            <div className="section-cap">Buyer proof</div>
+            <h2 className="mt-5 font-[family-name:var(--font-display)] text-[2.35rem] font-[360] leading-[0.96] tracking-[-0.045em] text-[var(--brand-text)] sm:text-[3.1rem]">
+              Real moments around guided land decisions.
+            </h2>
+            <p className="mt-5 max-w-[38rem] text-base leading-8 text-[var(--brand-text-muted)] sm:text-lg">
+              Field activity, buyer appreciation, and document-led review moments
+              help show the kind of process Marxvest is building around land
+              acquisition.
+            </p>
+          </div>
+        </RevealOnScroll>
+
+        <div
+          className="scrollbar-hidden -mx-4 mt-8 flex snap-x gap-4 overflow-x-auto px-4 pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0"
+          aria-label="Buyer proof moments"
+        >
+          {homepageProofMoments.map((moment, index) => (
+            <RevealOnScroll
+              key={moment.title}
+              from={index === 0 ? "left" : "right"}
+              delayMs={index * 80}
+              className="min-w-[84vw] snap-start sm:min-w-0"
+            >
+              <article className="h-full overflow-hidden rounded-[1.75rem] border border-[var(--brand-border)] bg-white shadow-[0_20px_60px_rgba(8,27,75,0.08)]">
+                <div className="relative aspect-[1.18/1] overflow-hidden bg-[var(--brand-surface)] sm:aspect-[1.42/1]">
+                  <Image
+                    src={moment.image.src}
+                    alt={moment.image.alt}
+                    fill
+                    sizes="(min-width: 640px) 46vw, 84vw"
+                    className="object-cover transition duration-500 hover:scale-[1.02]"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(6,18,49,0.78)] via-[rgba(6,18,49,0.22)] to-transparent p-5">
+                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/62">
+                      Proof moment
+                    </div>
+                    <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight text-white">
+                      {moment.title}
+                    </h3>
+                  </div>
+                </div>
+                <p className="p-5 text-sm leading-7 text-[var(--brand-text-muted)] sm:text-base">
+                  {moment.caption}
+                </p>
+              </article>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </section>
+
       <section className="mx-auto mt-12 grid w-[var(--page-width)] gap-6 py-10 lg:grid-cols-[0.95fr_1.05fr]">
         <RevealOnScroll from="left">
           <div className="rounded-[2.25rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-8 sm:p-10">
@@ -485,6 +583,51 @@ export default function HomePage() {
               </Link>
             </div>
           </RevealOnScroll>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-12 w-[var(--page-width)] py-10">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <RevealOnScroll from="left">
+            <div>
+              <div className="section-cap">FAQ</div>
+              <h2 className="mt-5 max-w-xl font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight text-[var(--brand-text)] sm:text-4xl">
+                Questions serious buyers ask before committing.
+              </h2>
+              <p className="mt-5 max-w-lg text-base leading-8 text-[var(--brand-text-muted)]">
+                A clearer buying decision starts with inspection, documents,
+                payment structure, and allocation timing.
+              </p>
+            </div>
+          </RevealOnScroll>
+
+          <div className="grid gap-3">
+            {homepageFaqs.map((faq, index) => (
+              <RevealOnScroll key={faq.question} from="up" delayMs={index * 60}>
+                <details className="group rounded-[1.35rem] border border-[var(--brand-border)] bg-white px-5 py-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-semibold text-[var(--brand-text)] [&::-webkit-details-marker]:hidden">
+                    <span>{faq.question}</span>
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-surface)] text-[var(--brand-primary)] transition group-open:rotate-45">
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-4 w-4 stroke-current"
+                      >
+                        <path
+                          d="M12 5v14M5 12h14"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </summary>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--brand-text-muted)] sm:text-base">
+                    {faq.answer}
+                  </p>
+                </details>
+              </RevealOnScroll>
+            ))}
+          </div>
         </div>
       </section>
 

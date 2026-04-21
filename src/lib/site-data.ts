@@ -16,6 +16,7 @@ export const company = {
   name: "Marxvest Spec Limited",
   shortName: "Marxvest",
   tagline: "Secure land positions built for long-term value.",
+  registrationNumber: "RC-2022340",
   phone: "+234 911 471 2695",
   email: "info@marxvestspec.com",
   address: "48, Sabo Ikorodu Road, opposite Nipco Filling Station, Lagos State",
@@ -82,6 +83,54 @@ export const homepageAbout = {
     label: "Marxvest story",
   },
 };
+
+export const homepageProofMoments = [
+  {
+    title: "Team activation moment",
+    caption:
+      "A Marxvest field moment captured during an estate activation and buyer engagement session.",
+    image: {
+      src: "/images/buyer-proof/team1.webp",
+      alt: "Marxvest team during a buyer engagement moment.",
+    },
+  },
+  {
+    title: "Buyer appreciation moment",
+    caption:
+      "A proof moment from a Marxvest field session, focused on buyer appreciation and estate confidence.",
+    image: {
+      src: "/images/buyer-proof/team11.webp",
+      alt: "Buyer appreciation moment with the Marxvest team.",
+    },
+  },
+  {
+    title: "Estate engagement",
+    caption:
+      "A real field interaction from the Marxvest team around estate awareness and guided buyer support.",
+    image: {
+      src: "/images/buyer-proof/team2.webp",
+      alt: "Marxvest estate engagement moment with team members.",
+    },
+  },
+  {
+    title: "Site visit support",
+    caption:
+      "An on-ground Marxvest moment showing the kind of guided support behind site visits and buyer questions.",
+    image: {
+      src: "/images/buyer-proof/team3.webp",
+      alt: "Marxvest team supporting a field visit moment.",
+    },
+  },
+  {
+    title: "Community proof",
+    caption:
+      "A team-led proof moment from Marxvest field activity, captured around trust and buyer-facing engagement.",
+    image: {
+      src: "/images/buyer-proof/team4.webp",
+      alt: "Marxvest team community proof and buyer engagement moment.",
+    },
+  },
+] as const;
 
 export const listings: Listing[] = [
   {
@@ -167,18 +216,41 @@ export const featuredListings = listings.filter((listing) => listing.featured);
 
 export const serviceHighlights = [
   {
-    title: "Verified land acquisition guidance",
-    body: "Every lead route is structured around title confidence, transaction clarity, and inspection planning.",
+    title: "Documentation-led acquisition guidance",
+    body: "Every buyer route is structured around title confidence, document visibility, and clear inspection planning before commitment.",
   },
   {
-    title: "Staff-led buyer qualification",
-    body: "Public visitors inquire first. The team confirms fit, documents, pricing, and next steps directly.",
+    title: "Buyer qualification before commitment",
+    body: "Public inquiries are reviewed by the team first, so fit, pricing, documents, and next steps are confirmed directly.",
   },
   {
-    title: "Agent-led inspection follow-up",
-    body: "Property questions, site visits, and document review now route through direct agent contact and inspection booking.",
+    title: "Guided inspection follow-up",
+    body: "Property questions, site visits, and document review stay connected through direct agent contact and inspection booking.",
   },
 ];
+
+export const homepageFaqs = [
+  {
+    question: "Can I inspect before payment?",
+    answer:
+      "Yes. Marxvest encourages guided site inspection before commitment so buyers can review the location, ask questions, and confirm next steps with the team.",
+  },
+  {
+    question: "What title documents exist?",
+    answer:
+      "Available documentation is shared through the estate-specific review process, including the title and survey details applicable to the selected property.",
+  },
+  {
+    question: "Do you offer installments?",
+    answer:
+      "Some estates support structured payment plans. Eligibility, deposit requirements, and timelines are confirmed per estate before a buyer proceeds.",
+  },
+  {
+    question: "How long is allocation?",
+    answer:
+      "Allocation timing depends on the selected estate and the confirmed acquisition process. The team explains the timeline during document and payment review.",
+  },
+] as const;
 
 export const processSteps = [
   "Submit an inquiry for a specific estate or plot type.",
