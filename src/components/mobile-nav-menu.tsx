@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { signOutAction } from "@/actions/auth";
 import { MainNav } from "@/components/main-nav";
@@ -13,11 +13,35 @@ type MobileNavMenuProps = {
 
 export function MobileNavMenu({ sessionRole }: MobileNavMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const dialogId = useId();
+
+  useEffect(() => {
+    if (!isOpen) {
+      buttonRef.current?.focus();
+      return;
+    }
+
+    panelRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
 
   return (
     <div className="lg:hidden">
       <button
+        ref={buttonRef}
         type="button"
+        aria-controls={dialogId}
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
@@ -41,6 +65,12 @@ export function MobileNavMenu({ sessionRole }: MobileNavMenuProps) {
           role="presentation"
         >
           <div
+            id={dialogId}
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            tabIndex={-1}
             className="absolute right-0 top-0 flex h-[100svh] w-[78%] max-w-[21rem] flex-col border-l border-black/5 bg-white px-6 pb-8 pt-[5.75rem] shadow-[-20px_0_60px_rgba(0,0,0,0.12)]"
             onClick={(event) => event.stopPropagation()}
           >

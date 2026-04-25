@@ -1,7 +1,14 @@
 import { redirect } from "next/navigation";
 
+import { buildNoIndexMetadata } from "@/lib/seo";
 import { getSession } from "@/lib/auth";
 import { auditEvents, homepageBanners, openInquiries } from "@/lib/site-data";
+
+export const metadata = buildNoIndexMetadata(
+  "Admin",
+  "Private Marxvest Real Estate administration interface.",
+  "/admin",
+);
 
 export default async function AdminPage() {
   const session = await getSession();

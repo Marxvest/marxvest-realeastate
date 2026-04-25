@@ -1,11 +1,18 @@
 import Link from "next/link";
 
 import { BookingForm } from "@/components/booking-form";
+import { buildNoIndexMetadata } from "@/lib/seo";
 import { company, listings } from "@/lib/site-data";
 
 type BookingPageProps = {
   searchParams: Promise<{ success?: string; error?: string; property?: string }>;
 };
+
+export const metadata = buildNoIndexMetadata(
+  "Book a site inspection",
+  "Book a site inspection with Marxvest Real Estate to review estate details, documentation, and next-step guidance before you buy.",
+  "/booking",
+);
 
 export default async function BookingPage({ searchParams }: BookingPageProps) {
   const params = await searchParams;
@@ -16,11 +23,12 @@ export default async function BookingPage({ searchParams }: BookingPageProps) {
         <div className="space-y-6">
           <div className="section-cap">Booking</div>
           <h1 className="font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--brand-text)] sm:text-6xl">
-            Book a guided site inspection before you commit capital.
+            Book a guided site inspection before you buy.
           </h1>
           <p className="text-lg leading-8 text-[var(--brand-text-muted)]">
-            Choose an estate, request an inspection date, and let the Marxvest team
-            confirm the right next step before you commit.
+            Choose an estate, request a preferred inspection date, and let the
+            Marxvest team confirm the next step for location review,
+            documentation guidance, and payment discussions.
           </p>
           <div className="space-y-3 text-base text-[var(--brand-text-muted)]">
             <p>{company.phone}</p>
@@ -49,7 +57,7 @@ export default async function BookingPage({ searchParams }: BookingPageProps) {
                     href={`/booking?property=${listing.slug}`}
                     className="text-sm font-semibold text-[var(--brand-primary)] transition hover:text-[var(--brand-primary-dark)]"
                   >
-                    Choose estate
+                    Book inspection for {listing.title}
                   </Link>
                 </div>
               ))}

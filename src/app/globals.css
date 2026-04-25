@@ -45,6 +45,15 @@ a:not([class]) {
   color: inherit;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(29, 78, 216, 0.38);
+  outline-offset: 3px;
+}
+
 button,
 input,
 textarea,

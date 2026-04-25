@@ -15,7 +15,7 @@ import type {
 export const company = {
   name: "Marxvest Spec Limited",
   shortName: "Marxvest",
-  tagline: "Secure land positions built for long-term value.",
+  tagline: "Verified land guidance built for confident property investment.",
   registrationNumber: "RC-2022340",
   phone: "+234 911 471 2695",
   email: "info@marxvestspec.com",
@@ -28,7 +28,7 @@ export const company = {
 
 export const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/listings", label: "Estates" },
+  { href: "/listings", label: "Listings" },
   { href: "/about", label: "About" },
   { href: "/booking", label: "Booking" },
   { href: "/blog", label: "Blog" },
@@ -39,18 +39,18 @@ export const navLinks = [
 export const homepageBanners: Banner[] = [
   {
     id: "launch-banner",
-    eyebrow: "Campaign",
-    title: "Featured estates with structured payment plans.",
-    body: "Explore prime estates now open for allocation, with clear documentation cues and payment terms that stay easy to compare.",
-    ctaLabel: "Browse estates",
+    eyebrow: "Verified estates",
+    title: "Explore available land backed by clearer documentation and pricing cues.",
+    body: "Review current estates with visible location details, plot sizes, payment structure, and documentation support before you commit.",
+    ctaLabel: "View available land",
     ctaHref: "/listings",
   },
   {
     id: "inspection-banner",
-    eyebrow: "Inspection",
-    title: "Book a guided site visit before you commit.",
-    body: "Use the booking flow to pick an estate, request a visit date, and let the team confirm the next step.",
-    ctaLabel: "Book inspection",
+    eyebrow: "Inspection support",
+    title: "Book a guided site inspection with Marxvest before you buy.",
+    body: "Request an inspection date, speak with an advisor, and confirm the right next step for documentation review and payment guidance.",
+    ctaLabel: "Book an inspection",
     ctaHref: "/booking",
   },
 ];
@@ -65,10 +65,10 @@ export const investorProfiles = [
 
 export const homepageAbout = {
   eyebrow: "About Us",
-  title: "Structured guidance for serious land buyers.",
+  title: "Guided land buying built around verification, inspection, and clarity.",
   paragraphs: [
-    "Marxvest Spec Limited brings a more structured approach to land acquisition, combining local market knowledge with a tighter transaction process for buyers who want clarity before they commit.",
-    "From the first inquiry to site inspection and allocation guidance, the team is positioned to keep the experience direct, credible, and easier to navigate for both home buyers and long-term investors.",
+    "Marxvest Real Estate helps buyers approach land ownership with clearer location details, guided inspections, and practical documentation support before money changes hands.",
+    "From first inquiry to inspection scheduling, payment conversations, and allocation guidance, the experience is designed to help buyers move with more confidence across Lagos, Ogun State, and other developing corridors.",
   ],
   image: {
     src: "/images/team-image.jpeg",
@@ -77,7 +77,7 @@ export const homepageAbout = {
   video: {
     poster:
       "https://marxvestspec.com/wp-content/uploads/2026/02/IMG-20251225-WA0093.jpg.jpeg",
-    alt: "Marxvest introduction video poster",
+    alt: "Marxvest team introducing verified land buying support in Nigeria.",
     src: "/videos/about-us.mp4",
     duration: "0:45",
     label: "Marxvest story",
@@ -216,16 +216,16 @@ export const featuredListings = listings.filter((listing) => listing.featured);
 
 export const serviceHighlights = [
   {
-    title: "Documentation-led acquisition guidance",
-    body: "Every buyer route is structured around title confidence, document visibility, and clear inspection planning before commitment.",
+    title: "Verified estates",
+    body: "Every Marxvest estate is presented with available title and documentation cues so buyers can review land opportunities with greater confidence.",
   },
   {
-    title: "Buyer qualification before commitment",
-    body: "Public inquiries are reviewed by the team first, so fit, pricing, documents, and next steps are confirmed directly.",
+    title: "Clear documentation guidance",
+    body: "Buyers receive guided support around surveys, deed packages, payment structure, and the documents attached to each estate.",
   },
   {
-    title: "Guided inspection follow-up",
-    body: "Property questions, site visits, and document review stay connected through direct agent contact and inspection booking.",
+    title: "Guided inspections and allocation support",
+    body: "Inspection booking, advisor follow-up, payment conversations, and allocation guidance are kept visible so the buying process stays easier to understand.",
   },
 ];
 
@@ -253,18 +253,19 @@ export const homepageFaqs = [
 ] as const;
 
 export const processSteps = [
-  "Submit an inquiry for a specific estate or plot type.",
-  "Marxvest reviews the request and confirms the suitable next step.",
-  "Book or complete a guided site inspection with the team.",
-  "Review pricing, documentation, and acquisition terms directly with an agent.",
-  "Allocation guidance continues after the agreed process is confirmed.",
+  "Explore available estates and compare location, pricing, and plot options.",
+  "Speak with a Marxvest advisor about your budget, timeline, and preferred location.",
+  "Schedule a physical or virtual site inspection before making a decision.",
+  "Review documentation, payment terms, and inspection notes with the team.",
+  "Complete payment and continue into the allocation support process.",
 ];
 
 export const trustPoints = [
-  "Land-focused inventory and estate-specific positioning",
-  "Documentation surfaced clearly on each listing",
-  "Homepage banners reserved for live campaigns and launches",
-  "Traceable inquiry and inspection workflow",
+  "Verified estates presented with practical due-diligence context",
+  "Clear documentation guidance before payment discussions continue",
+  "Guided inspections for buyers who want to verify land physically or remotely",
+  "Flexible payment conversations matched to estate eligibility",
+  "Transparent allocation support after the agreed purchase process",
 ];
 
 export const trustFramework = {
@@ -295,10 +296,10 @@ export const trustFramework = {
     },
   ],
   legalNotes: [
-    "Public visitors can browse listings, contact an agent, and submit inspection requests before acquisition conversations continue.",
-    "Online checkout is archived for now; current settlement instructions should come directly from authorized Marxvest staff.",
-    "Allocation remains subject to the confirmed acquisition process and documentation review.",
-    "Lead-capture forms should be connected to protected storage and anti-spam controls before production launch.",
+    "Public visitors can browse listings, contact an advisor, and request inspections before moving into payment or allocation conversations.",
+    "Settlement instructions should only be confirmed through authorized Marxvest representatives after the buyer has reviewed the selected estate and its documentation.",
+    "Allocation remains subject to the agreed acquisition process, payment confirmation, and documentation review.",
+    "Inspection and inquiry submissions are reviewed by the Marxvest team and used only for buyer guidance, inspection coordination, and acquisition support.",
   ],
 };
 

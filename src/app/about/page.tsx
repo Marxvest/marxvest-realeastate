@@ -1,3 +1,12 @@
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "About Marxvest Real Estate",
+  description:
+    "Learn about Marxvest Real Estate and how we help buyers access verified land, guided inspections, clear documentation, and confident property investment support in Nigeria.",
+  path: "/about",
+});
+
 export default function AboutPage() {
   return (
     <main className="pb-24">
@@ -5,21 +14,28 @@ export default function AboutPage() {
         <div>
           <div className="section-cap">About Marxvest</div>
           <h1 className="mt-6 font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--brand-text)] sm:text-6xl">
-            A land-first company with a stricter transaction standard.
+            Helping buyers secure verified land in Nigeria with greater clarity.
           </h1>
         </div>
         <div className="space-y-6 text-lg leading-8 text-[var(--brand-text-muted)]">
           <p>
-            Marxvest Spec Limited is not positioned as a generic real-estate
-            brochure brand. The company is framed here as a focused land and
-            estate operator built around documentation clarity, sales discipline,
-            and structured digital conversion.
+            Marxvest Real Estate helps buyers approach land acquisition with
+            stronger confidence, clearer information, and a more guided
+            transaction experience. Our focus is on inspected estates,
+            documentation visibility, practical payment guidance, and honest
+            support from inquiry to allocation.
           </p>
           <p>
-            The mark itself suggests upward motion and performance, so the new
-            interface avoids lifestyle excess and leans into a sharper,
-            blue-led corporate posture. Every public page is designed to make
-            the business feel more credible than the previous WordPress site.
+            We serve first-time land buyers, diaspora investors, and long-term
+            property investors who want to compare estates, understand title
+            posture, schedule inspections, and move forward through a transparent
+            process instead of guesswork.
+          </p>
+          <p>
+            Marxvest Spec Limited remains the operating business behind this
+            platform, while Marxvest Real Estate is the public-facing brand used
+            to guide buyers through verified land opportunities in Lagos, Ogun
+            State, Ikorodu, Sagamu, Alabata, and other developing corridors.
           </p>
         </div>
       </section>

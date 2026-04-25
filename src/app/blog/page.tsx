@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
+import { buildMetadata } from "@/lib/seo";
 import { blogPosts } from "@/lib/site-data";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Real Estate Guides & Land Buying Tips",
+  description:
+    "Read Marxvest real estate guides on land titles, inspections, installment payments, documentation, and safe land buying in Nigeria.",
+  path: "/blog",
+});
 
 export default function BlogPage() {
   const recentPosts = blogPosts.slice(0, 3);
@@ -11,12 +20,12 @@ export default function BlogPage() {
         <div>
           <div className="section-cap">Blog</div>
           <h1 className="mt-6 max-w-4xl font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--brand-text)] sm:text-6xl">
-            Investor education shaped around land verification, payments, and smarter acquisition decisions.
+            Real Estate Guides &amp; Land Buying Tips
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-[var(--brand-text-muted)]">
-            Use these articles to understand how disciplined land buying works,
-            what to verify before payment, and how to think about long-term value
-            in growth corridors.
+            Learn how to buy land safely in Nigeria, understand land titles,
+            inspect estates, compare payment plans, and avoid common property
+            mistakes before you commit capital.
           </p>
 
           <div className="mt-10 grid gap-6">
@@ -46,7 +55,7 @@ export default function BlogPage() {
                   href={`/blog/${post.slug}`}
                   className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-primary)] transition hover:gap-3"
                 >
-                  Read more
+                  Read guide: {post.title}
                   <span aria-hidden="true">→</span>
                 </Link>
               </article>
@@ -83,6 +92,23 @@ export default function BlogPage() {
               <div>Land verification</div>
               <div>Payments</div>
               <div>Buyer education</div>
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[0_16px_40px_rgba(8,24,84,0.05)]">
+            <div className="text-xs uppercase tracking-[0.28em] text-[var(--brand-primary)]">
+              Helpful next steps
+            </div>
+            <div className="mt-5 grid gap-3 text-sm">
+              <Link href="/listings" className="text-[var(--brand-text-muted)] transition hover:text-[var(--brand-primary)]">
+                View available land listings in Nigeria
+              </Link>
+              <Link href="/trust" className="text-[var(--brand-text-muted)] transition hover:text-[var(--brand-primary)]">
+                Review our documentation and buyer protection guidance
+              </Link>
+              <Link href="/contact" className="text-[var(--brand-text-muted)] transition hover:text-[var(--brand-primary)]">
+                Contact Marxvest Real Estate for land inquiries
+              </Link>
             </div>
           </div>
         </aside>

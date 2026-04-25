@@ -1,8 +1,16 @@
 import { redirect } from "next/navigation";
 
+import { buildNoIndexMetadata } from "@/lib/seo";
+
 type AppointmentPageProps = {
   searchParams: Promise<{ property?: string; success?: string; error?: string }>;
 };
+
+export const metadata = buildNoIndexMetadata(
+  "Inspection appointment",
+  "Redirects inspection appointment requests to the main Marxvest Real Estate booking flow.",
+  "/appointment",
+);
 
 export default async function AppointmentPage({
   searchParams,

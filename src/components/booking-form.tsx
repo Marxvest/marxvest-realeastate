@@ -18,52 +18,65 @@ export function BookingForm({
     <form action={submitLeadAction} className="grid gap-5 sm:grid-cols-2">
       <input type="hidden" name="returnTo" value={returnTo} />
       <div>
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
-          Full name
+        <label htmlFor="booking-name" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Full name <span aria-hidden="true">*</span>
         </label>
         <input
+          id="booking-name"
           type="text"
           name="name"
+          autoComplete="name"
+          required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
         />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
-          Phone
+        <label htmlFor="booking-phone" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Phone <span aria-hidden="true">*</span>
         </label>
         <input
+          id="booking-phone"
           type="tel"
           name="phone"
+          autoComplete="tel"
+          required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
         />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
-          Email
+        <label htmlFor="booking-email" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Email <span aria-hidden="true">*</span>
         </label>
         <input
+          id="booking-email"
           type="email"
           name="email"
+          autoComplete="email"
+          required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
         />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
-          Preferred date
+        <label htmlFor="booking-date" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Preferred date <span aria-hidden="true">*</span>
         </label>
         <input
+          id="booking-date"
           type="date"
           name="preferredDate"
+          required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
         />
       </div>
       <div className="sm:col-span-2">
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
-          Preferred property
+        <label htmlFor="booking-listing" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Preferred property <span aria-hidden="true">*</span>
         </label>
         <select
+          id="booking-listing"
           name="listingSlug"
           defaultValue={property ?? ""}
+          required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
         >
           <option value="" disabled>
@@ -77,10 +90,11 @@ export function BookingForm({
         </select>
       </div>
       <div className="sm:col-span-2">
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label htmlFor="booking-message" className="block text-sm font-semibold text-[var(--brand-text)]">
           Notes
         </label>
         <textarea
+          id="booking-message"
           name="message"
           rows={4}
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
@@ -88,19 +102,19 @@ export function BookingForm({
         />
       </div>
       {success ? (
-        <p className="sm:col-span-2 text-sm text-[var(--brand-primary)]">
+        <p role="status" aria-live="polite" className="sm:col-span-2 text-sm text-[var(--brand-primary)]">
           Inspection request submitted. Our team will confirm the next step shortly.
         </p>
       ) : null}
       {error ? (
-        <p className="sm:col-span-2 text-sm text-[var(--brand-danger)]">{error}</p>
+        <p role="alert" className="sm:col-span-2 text-sm text-[var(--brand-danger)]">{error}</p>
       ) : null}
       <div className="sm:col-span-2">
         <button
           type="submit"
           className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-5 py-3 text-sm font-semibold text-white"
         >
-          Book Site Inspection
+          Submit inspection request
         </button>
       </div>
     </form>

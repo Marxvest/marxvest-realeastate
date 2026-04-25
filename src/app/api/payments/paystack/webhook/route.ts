@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST() {
   return NextResponse.json(
-    { error: "Paystack webhook processing is archived for now." },
+    { error: "Webhook-based payment confirmation is currently unavailable." },
     { status: 410 },
   );
 }

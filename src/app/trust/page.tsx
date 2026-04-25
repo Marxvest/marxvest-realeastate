@@ -1,4 +1,12 @@
+import { buildMetadata } from "@/lib/seo";
 import { trustFramework } from "@/lib/site-data";
+
+export const metadata = buildMetadata({
+  title: "Trust, Documentation & Buyer Protection",
+  description:
+    "Understand Marxvest Real Estate’s approach to land verification, documentation, inspections, allocation support, buyer guidance, and transparent real estate transactions.",
+  path: "/trust",
+});
 
 export default function TrustPage() {
   return (
@@ -7,12 +15,13 @@ export default function TrustPage() {
         <div className="max-w-4xl">
           <div className="section-cap">Trust & legal</div>
           <h1 className="mt-6 font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--brand-text)] sm:text-6xl">
-            The public sales experience is backed by clearer rules, guided inspections, and visible intent.
+            Trust, documentation, and buyer protection come before commitment.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-[var(--brand-text-muted)]">
-            This page explains the operating posture behind Marxvest&apos;s public
-            website: why buyer actions are staged, how document confidence is handled,
-            and which values shape the investment experience.
+            This page explains how Marxvest Real Estate approaches land
+            verification, document review, inspections, payment transparency,
+            and allocation guidance so buyers can move forward with greater
+            clarity and responsibility.
           </p>
         </div>
 

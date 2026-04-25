@@ -35,7 +35,6 @@ export function BrandLogo({ compact = false, className }: BrandLogoProps) {
             "h-auto w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]",
             compact ? "max-w-[48px]" : "max-w-[56px] sm:max-w-[72px]",
           )}
-          priority
         />
       </div>
       <div className="min-w-0">

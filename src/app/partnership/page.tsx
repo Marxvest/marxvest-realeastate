@@ -1,8 +1,15 @@
 import { submitLeadAction } from "@/actions/forms";
+import { buildNoIndexMetadata } from "@/lib/seo";
 
 type PartnershipPageProps = {
   searchParams: Promise<{ success?: string; error?: string }>;
 };
+
+export const metadata = buildNoIndexMetadata(
+  "Partnership inquiries",
+  "Private partnership inquiry page for organizations seeking to work with Marxvest Real Estate.",
+  "/partnership",
+);
 
 export default async function PartnershipPage({
   searchParams,
@@ -27,42 +34,49 @@ export default async function PartnershipPage({
           <form action={submitLeadAction} className="grid gap-5 sm:grid-cols-2">
             <input type="hidden" name="returnTo" value="/partnership" />
             <div>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
-                Full name
+              <label htmlFor="partnership-name" className="block text-sm font-semibold text-[var(--brand-text)]">
+                Full name <span aria-hidden="true">*</span>
               </label>
               <input
+                id="partnership-name"
                 type="text"
                 name="name"
+                autoComplete="name"
+                required
                 className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
-                Phone
+              <label htmlFor="partnership-phone" className="block text-sm font-semibold text-[var(--brand-text)]">
+                Phone <span aria-hidden="true">*</span>
               </label>
               <input
+                id="partnership-phone"
                 type="tel"
                 name="phone"
+                autoComplete="tel"
+                required
                 className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label htmlFor="partnership-message" className="block text-sm font-semibold text-[var(--brand-text)]">
                 Why do you want to partner with Marxvest?
               </label>
               <textarea
+                id="partnership-message"
                 name="message"
                 rows={4}
                 className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
               />
             </div>
             {params.success ? (
-              <p className="sm:col-span-2 text-sm text-[var(--brand-primary)]">
+              <p role="status" aria-live="polite" className="sm:col-span-2 text-sm text-[var(--brand-primary)]">
                 Partnership request submitted. Our team will review it and respond.
               </p>
             ) : null}
             {params.error ? (
-              <p className="sm:col-span-2 text-sm text-[var(--brand-danger)]">
+              <p role="alert" className="sm:col-span-2 text-sm text-[var(--brand-danger)]">
                 {params.error}
               </p>
             ) : null}
@@ -71,7 +85,7 @@ export default async function PartnershipPage({
                 type="submit"
                 className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-5 py-3 text-sm font-semibold text-white"
               >
-                Submit partnership form
+                Submit partnership inquiry
               </button>
             </div>
           </form>

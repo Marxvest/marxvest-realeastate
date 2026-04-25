@@ -11,6 +11,8 @@ const statusLabel: Record<Listing["status"], string> = {
 };
 
 export function ListingCard({ listing }: { listing: Listing }) {
+  const documentationSummary = listing.documentation.join(" · ");
+
   return (
     <article className="group grid gap-6 border-t border-[var(--brand-border)] py-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(22rem,0.9fr)] lg:items-center">
       <RevealOnScroll from="left">
@@ -20,7 +22,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         >
           <Image
             src={listing.heroImage}
-            alt={listing.title}
+            alt={`${listing.estateName} land estate in ${listing.location}, ${listing.state}`}
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover transition duration-500 group-hover:scale-[1.04]"
@@ -71,6 +73,14 @@ export function ListingCard({ listing }: { listing: Listing }) {
                 {listing.paymentEligibility}
               </dd>
             </div>
+            <div>
+              <dt className="text-[0.72rem] uppercase tracking-[0.28em] text-[var(--brand-text-soft)]">
+                Documentation
+              </dt>
+              <dd className="mt-2 text-base text-[var(--brand-text)]">
+                {documentationSummary}
+              </dd>
+            </div>
           </dl>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -79,10 +89,17 @@ export function ListingCard({ listing }: { listing: Listing }) {
             </span>
             <Link
               href={`/listings/${listing.slug}`}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-primary)] transition hover:gap-3"
+              aria-label={`View ${listing.estateName} details`}
+              className="inline-flex items-center justify-center rounded-full border border-[var(--brand-border-strong)] px-4 py-2 text-sm font-semibold text-[var(--brand-text)] transition hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
             >
-              Review listing
-              <span aria-hidden="true">→</span>
+              View Details
+            </Link>
+            <Link
+              href={`/booking?property=${listing.slug}`}
+              aria-label={`Book an inspection for ${listing.estateName}`}
+              className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary-dark)]"
+            >
+              Book Inspection
             </Link>
           </div>
         </div>

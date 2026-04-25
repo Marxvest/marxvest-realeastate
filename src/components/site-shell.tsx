@@ -4,11 +4,13 @@ import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import { signOutAction } from "@/actions/auth";
 import { BackToTopButton } from "@/components/back-to-top-button";
 import { BrandLogo } from "@/components/brand-logo";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { MainNav } from "@/components/main-nav";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
 import { getSession } from "@/lib/auth";
 import { company, navLinks } from "@/lib/site-data";
+import { buildRealEstateAgentSchema, buildWebsiteSchema } from "@/lib/schema";
 
 const bodyFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -30,6 +32,8 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
       suppressHydrationWarning
     >
       <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:5.15rem] lg:[--sticky-shell-height:4.75rem]">
+        <JsonLd data={buildRealEstateAgentSchema()} />
+        <JsonLd data={buildWebsiteSchema()} />
         <div className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[rgba(255,255,255,0.72)] backdrop-blur-md">
           <header>
             <div className="mx-auto flex h-[5.15rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.75rem] lg:justify-start lg:gap-5">
@@ -67,7 +71,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
                       className="hidden h-12 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-5 text-[0.76rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_14px_30px_rgba(7,18,45,0.18),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_18px_38px_rgba(7,18,45,0.24),inset_0_1px_0_rgba(255,255,255,0.16)] lg:inline-flex"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-sand)]" />
-                      Contact Agent
+                      Contact Marxvest
                     </Link>
                     <MobileNavMenu />
                   </>
@@ -87,9 +91,9 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
                 <div className="space-y-4">
                   <BrandLogo />
                   <p className="max-w-xl text-sm leading-7 text-[var(--brand-text-muted)]">
-                    {company.name} is building a stricter, land-first digital sales
-                    platform that prioritizes documentation clarity, structured
-                    inspections, and disciplined advisory follow-up.
+                    Marxvest Real Estate helps buyers review verified land,
+                    understand documentation, schedule inspections, and move
+                    through payment and allocation support with greater clarity.
                   </p>
                 </div>
                 <div className="space-y-3">

@@ -1,5 +1,22 @@
+import type { Metadata } from "next";
+
 import { ListingCard } from "@/components/listing-card";
+import { buildMetadata } from "@/lib/seo";
 import { listings } from "@/lib/site-data";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Land Listings in Nigeria",
+  description:
+    "Explore available Marxvest land listings in Nigeria with verified documentation, clear pricing, flexible payment options, inspection support, and allocation guidance.",
+  path: "/listings",
+  keywords: [
+    "land listings Nigeria",
+    "land for sale in Ogun State",
+    "land for sale in Lagos",
+    "verified land listings",
+    "buy land in Nigeria",
+  ],
+});
 
 type ListingsPageProps = {
   searchParams: Promise<{
@@ -55,11 +72,13 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         <div className="max-w-4xl space-y-6">
           <div className="section-cap">Listings</div>
           <h1 className="font-[family-name:var(--font-display)] text-5xl font-semibold leading-tight text-[var(--brand-text)] sm:text-6xl">
-            Land and estate inventory framed for faster due diligence.
+            Available Land Listings in Nigeria
           </h1>
           <p className="max-w-3xl text-lg leading-8 text-[var(--brand-text-muted)]">
-            Each listing surfaces location, plot sizing, documentation cues, and
-            acquisition posture before you engage the sales flow.
+            Explore verified land opportunities with visible location details,
+            plot sizes, pricing cues, payment structure, documentation guidance,
+            and inspection support so you can compare estates with more
+            confidence.
           </p>
         </div>
 
@@ -80,7 +99,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         </div>
 
         <form className="mt-6 max-w-2xl rounded-[1.8rem] border border-[var(--brand-border)] bg-white p-3 sm:flex sm:items-center sm:gap-3">
+          <label htmlFor="listing-search" className="sr-only">
+            Search available land listings by estate, location, or plot size
+          </label>
           <input
+            id="listing-search"
             type="search"
             name="q"
             defaultValue={params.q ?? ""}
@@ -117,6 +140,24 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
               </p>
             </div>
           )}
+        </div>
+
+        <div className="mt-12 grid gap-6 rounded-[2rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold text-[var(--brand-text)]">
+              Verified listings with clearer buyer guidance
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--brand-text-muted)]">
+              Every Marxvest listing is presented with available location
+              details, payment terms, title or document information, and
+              inspection guidance to help buyers make informed decisions.
+            </p>
+          </div>
+          <div className="grid gap-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p>Review estates in Lagos, Ogun State, Ikorodu corridors, and surrounding growth locations.</p>
+            <p>Compare plot sizes, price ranges, documentation posture, and eligibility for installment conversations.</p>
+            <p>Use the detail page for each estate to plan inspection, payment review, and allocation next steps.</p>
+          </div>
         </div>
       </section>
     </main>

@@ -1,5 +1,12 @@
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
+import { buildNoIndexMetadata } from "@/lib/seo";
 import { investorProfiles, processSteps, serviceHighlights } from "@/lib/site-data";
+
+export const metadata = buildNoIndexMetadata(
+  "Marxvest services",
+  "Overview of Marxvest Real Estate acquisition support, site inspections, and buyer guidance.",
+  "/services",
+);
 
 export default function ServicesPage() {
   return (
