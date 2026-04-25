@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import { signOutAction } from "@/actions/auth";
 import { BackToTopButton } from "@/components/back-to-top-button";
 import { BrandLogo } from "@/components/brand-logo";
+import ChatWidget from "@/components/ai-assistant/ChatWidget";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { MainNav } from "@/components/main-nav";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
@@ -31,12 +32,12 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
       className={`${bodyFont.variable} ${displayFont.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:5.15rem] lg:[--sticky-shell-height:4.75rem]">
+      <body className="bg-[var(--brand-background)] text-[var(--brand-text)] antialiased [--sticky-shell-height:4.8rem] lg:[--sticky-shell-height:4.35rem]">
         <JsonLd data={buildRealEstateAgentSchema()} />
         <JsonLd data={buildWebsiteSchema()} />
         <div className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[rgba(255,255,255,0.72)] backdrop-blur-md">
           <header>
-            <div className="mx-auto flex h-[5.15rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.75rem] lg:justify-start lg:gap-5">
+            <div className="mx-auto flex h-[4.8rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-3 sm:gap-4 lg:h-[4.35rem] lg:justify-start lg:gap-5">
               <BrandLogo compact className="min-w-0 shrink-0" />
               <nav className="hidden flex-1 items-center justify-center gap-7 lg:flex">
                 <MainNav />
@@ -68,7 +69,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
                   <>
                     <Link
                       href="/contact"
-                      className="hidden h-12 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-5 text-[0.76rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_14px_30px_rgba(7,18,45,0.18),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_18px_38px_rgba(7,18,45,0.24),inset_0_1px_0_rgba(255,255,255,0.16)] lg:inline-flex"
+                      className="hidden h-11 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-4.5 text-[0.74rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_26px_rgba(7,18,45,0.16),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_16px_34px_rgba(7,18,45,0.22),inset_0_1px_0_rgba(255,255,255,0.16)] lg:inline-flex"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-sand)]" />
                       Contact Marxvest
@@ -129,6 +130,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
             </footer>
           </div>
 
+          <ChatWidget />
           <WhatsAppWidget />
           <BackToTopButton />
         </div>

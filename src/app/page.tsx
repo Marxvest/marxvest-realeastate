@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { BuyerProofSlider } from "@/components/buyer-proof-slider";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HeroImageSlider } from "@/components/hero-image-slider";
 import { ListingCard } from "@/components/listing-card";
@@ -65,10 +66,11 @@ function HeroTrustIcon({ type }: { type: (typeof heroTrustBadges)[number]["icon"
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
+  const iconClassName = "h-4 w-4 shrink-0 sm:h-[1.05rem] sm:w-[1.05rem]";
 
   if (type === "shield") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={iconClassName}>
         <path
           {...commonProps}
           d="M12 3 5.5 5.4v5.7c0 4.1 2.6 7.8 6.5 9.2 3.9-1.4 6.5-5.1 6.5-9.2V5.4L12 3Z"
@@ -81,7 +83,7 @@ function HeroTrustIcon({ type }: { type: (typeof heroTrustBadges)[number]["icon"
 
   if (type === "document") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={iconClassName}>
         <path
           {...commonProps}
           d="M7 3.8h7l3 3v13.4H7V3.8Z"
@@ -95,7 +97,7 @@ function HeroTrustIcon({ type }: { type: (typeof heroTrustBadges)[number]["icon"
 
   if (type === "users") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={iconClassName}>
         <path {...commonProps} d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15.5 11a3 3 0 1 0 0-6" fill="none" />
         <path {...commonProps} d="M3.5 19.2c.5-3.1 2.3-5 5-5s4.5 1.9 5 5M13 14.4c2.5.2 4.2 1.9 4.7 4.8" fill="none" />
       </svg>
@@ -103,7 +105,7 @@ function HeroTrustIcon({ type }: { type: (typeof heroTrustBadges)[number]["icon"
   }
 
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7">
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={iconClassName}>
       <path
         {...commonProps}
         d="M4.5 12.5 12.8 4H20v7.2l-8.5 8.3-7-7Z"
@@ -120,7 +122,7 @@ function HeroTrustIconFrame({
   type: (typeof heroTrustBadges)[number]["icon"];
 }) {
   return (
-    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[rgba(229,208,166,0.48)] bg-[rgba(229,208,166,0.22)] text-[#F4D892] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_8px_20px_rgba(0,0,0,0.12)]">
+    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(229,208,166,0.34)] bg-[rgba(229,208,166,0.14)] text-[#F4D892] shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_8px_18px_rgba(0,0,0,0.1)]">
       <HeroTrustIcon type={type} />
     </span>
   );
@@ -266,9 +268,9 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="/booking"
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-[rgba(255,255,255,0.18)] bg-[rgba(8,27,75,0.2)] px-4 text-[14px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[16px]"
+                    className="inline-flex h-11 items-center justify-center rounded-full border border-[rgba(255,255,255,0.35)] bg-[rgba(255,255,255,0.06)] px-4 text-[14px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[8px] transition hover:border-[rgba(233,217,189,0.62)] hover:bg-[rgba(233,217,189,0.12)]"
                   >
-                    Book an Inspection
+                    Book Site Inspection
                   </Link>
                 </div>
 
@@ -281,21 +283,21 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="/booking"
-                    className="inline-flex h-14 w-full items-center justify-center rounded-full border border-white/28 bg-transparent px-6 text-[17px] font-medium text-[var(--brand-white)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md transition hover:bg-white/8 sm:w-auto sm:min-w-[11rem] sm:px-7 sm:text-sm"
+                    className="inline-flex h-14 w-full items-center justify-center rounded-full border border-[rgba(255,255,255,0.35)] bg-[rgba(255,255,255,0.06)] px-6 text-[17px] font-medium text-[var(--brand-white)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[8px] transition hover:border-[rgba(233,217,189,0.62)] hover:bg-[rgba(233,217,189,0.12)] sm:w-auto sm:min-w-[11rem] sm:px-7 sm:text-sm"
                   >
-                    Book an Inspection
+                    Book Site Inspection
                   </Link>
                 </div>
               </div>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={260}>
-              <div className="hero-proof-band mt-10 grid grid-cols-4 overflow-hidden rounded-[0.9rem] border border-white/10 sm:hidden">
+              <div className="hero-proof-band mt-10 grid grid-cols-4 overflow-hidden rounded-[0.85rem] border border-white/8 sm:hidden">
                 {heroTrustBadges.map((badge, index) => (
                   <div
                     key={badge.label}
-                    className={`flex min-h-[3.7rem] items-center justify-center gap-1.5 px-1.5 py-2 text-[var(--brand-sand)] ${
-                      index > 0 ? "border-l border-white/8" : ""
+                    className={`flex min-h-[3.25rem] items-center justify-center gap-1.5 px-1.5 py-1.5 text-[var(--brand-sand)] ${
+                      index > 0 ? "border-l border-white/6" : ""
                     }`}
                   >
                     <HeroTrustIcon type={badge.icon} />
@@ -327,16 +329,16 @@ export default function HomePage() {
           </div>
 
           <RevealOnScroll from="up" delayMs={340}>
-            <div className="hero-proof-band hidden overflow-hidden rounded-[1.1rem] border border-white/14 sm:grid sm:grid-cols-4">
+            <div className="hero-proof-band hidden overflow-hidden rounded-[1rem] border border-white/10 sm:grid sm:grid-cols-4">
               {heroTrustBadges.map((badge, index) => (
                 <div
                   key={badge.label}
-                  className={`flex items-center gap-4 px-5 py-5 lg:px-6 ${
-                    index > 0 ? "border-l border-white/10" : ""
+                  className={`flex items-center gap-3.5 px-5 py-4 lg:px-6 ${
+                    index > 0 ? "border-l border-white/6" : ""
                   }`}
                 >
                   <HeroTrustIconFrame type={badge.icon} />
-                  <div className="text-sm font-semibold leading-tight text-white/88">
+                  <div className="text-[0.92rem] font-semibold leading-tight text-white/86">
                     {badge.label}
                   </div>
                 </div>
@@ -498,42 +500,7 @@ export default function HomePage() {
           </div>
         </RevealOnScroll>
 
-        <div
-          className="scrollbar-hidden -mx-4 mt-8 flex snap-x gap-4 overflow-x-auto px-4 pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0"
-          aria-label="Buyer proof moments"
-        >
-          {homepageProofMoments.map((moment, index) => (
-            <RevealOnScroll
-              key={moment.title}
-              from={index === 0 ? "left" : "right"}
-              delayMs={index * 80}
-              className="min-w-[84vw] snap-start sm:min-w-0"
-            >
-              <article className="h-full overflow-hidden rounded-[1.75rem] border border-[var(--brand-border)] bg-white shadow-[0_20px_60px_rgba(8,27,75,0.08)]">
-                <div className="relative aspect-[1.18/1] overflow-hidden bg-[var(--brand-surface)] sm:aspect-[1.42/1]">
-                  <Image
-                    src={moment.image.src}
-                    alt={moment.image.alt}
-                    fill
-                    sizes="(min-width: 640px) 46vw, 84vw"
-                    className="object-cover transition duration-500 hover:scale-[1.02]"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(6,18,49,0.78)] via-[rgba(6,18,49,0.22)] to-transparent p-5">
-                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/62">
-                      Proof moment
-                    </div>
-                    <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight text-white">
-                      {moment.title}
-                    </h3>
-                  </div>
-                </div>
-                <p className="p-5 text-sm leading-7 text-[var(--brand-text-muted)] sm:text-base">
-                  {moment.caption}
-                </p>
-              </article>
-            </RevealOnScroll>
-          ))}
-        </div>
+        <BuyerProofSlider moments={homepageProofMoments} />
       </section>
 
       <section className="mx-auto mt-12 grid w-[var(--page-width)] gap-6 py-10 lg:grid-cols-[0.95fr_1.05fr]">

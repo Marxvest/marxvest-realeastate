@@ -1,0 +1,1532 @@
+Marxvest AI Assistant Integration Pack
+This document contains the full code and Codex integration instructions for adding an isolated AI sales and
+customer-care assistant to the Marxvest website.
+The goal is to add the assistant without disrupting the current website codebase.
+0. Implementation Strategy
+The assistant should be added as a self-contained feature.
+Do not rewrite the existing Marxvest pages, layout, navbar, estate cards, or contact forms unless absolutely
+necessary.
+Add the feature in isolated folders:
+components/ai-assistant/
+lib/ai-assistant/
+types/ai-assistant.ts
+app/api/ai-assistant/
+supabase/migrations/
+If the project uses a src/ directory, place these folders under src/ where appropriate.
+If the project uses Next.js App Router, the API routes should go under:
+app/api/ai-assistant/chat/route.ts
+app/api/ai-assistant/lead/route.ts
+If the project uses Pages Router, adapt them to:
+pages/api/ai-assistant/chat.ts
+pages/api/ai-assistant/lead.ts
+If the project uses a separate NestJS backend, move the API logic into NestJS controllers and services
+instead.
+1
+
+-- 1 of 38 --
+
+1. Required Environment Variables
+Add these to .env.local :
+OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+NEXT_PUBLIC_MARXVEST_WHATSAPP_NUMBER=2349114712695
+Important:
+Never expose SUPABASE_SERVICE_ROLE_KEY to the browser.
+Use it only inside server-side API routes.
+The frontend should only use public keys or call backend endpoints.
+2. Install Packages
+Use the package manager already used in the codebase.
+For npm:
+npm install openai @supabase/supabase-js lucide-react
+For pnpm:
+pnpm add openai @supabase/supabase-js lucide-react
+For yarn:
+yarn add openai @supabase/supabase-js lucide-react
+3. Supabase SQL Schema
+Create a migration file:
+•
+•
+•
+2
+
+-- 2 of 38 --
+
+supabase/migrations/001_ai_assistant.sql
+Add this SQL:
+create extension if not exists vector;
+create table if not exists ai_estates (
+id uuid primary key default gen_random_uuid(),
+name text not null,
+location text,
+category text,
+description text,
+features text[] default '{}',
+payment_plan text,
+title_document text,
+starting_price text,
+whatsapp_message text,
+is_active boolean default true,
+created_at timestamptz default now(),
+updated_at timestamptz default now()
+);
+create table if not exists ai_faqs (
+id uuid primary key default gen_random_uuid(),
+question text not null,
+answer text not null,
+is_published boolean default true,
+sort_order integer default 0,
+created_at timestamptz default now(),
+updated_at timestamptz default now()
+);
+create table if not exists ai_conversations (
+id uuid primary key default gen_random_uuid(),
+visitor_id text,
+source text default 'website',
+page_url text,
+status text default 'open',
+started_at timestamptz default now(),
+last_message_at timestamptz default now(),
+metadata jsonb default '{}'
+);
+create table if not exists ai_messages (
+id uuid primary key default gen_random_uuid(),
+conversation_id uuid references ai_conversations(id) on delete cascade,
+3
+
+-- 3 of 38 --
+
+role text not null check (role in ('user', 'assistant', 'system')),
+content text not null,
+model text,
+created_at timestamptz default now(),
+metadata jsonb default '{}'
+);
+create table if not exists ai_leads (
+id uuid primary key default gen_random_uuid(),
+conversation_id uuid references ai_conversations(id) on delete set null,
+name text not null,
+phone text not null,
+email text,
+estate_interest text,
+budget text,
+buying_purpose text,
+timeline text,
+conversation_summary text,
+source text default 'website_assistant',
+status text default 'new',
+created_at timestamptz default now()
+);
+create table if not exists ai_knowledge_documents (
+id uuid primary key default gen_random_uuid(),
+title text not null,
+content text not null,
+source text default 'manual',
+is_active boolean default true,
+created_at timestamptz default now(),
+updated_at timestamptz default now()
+);
+create table if not exists ai_knowledge_chunks (
+id uuid primary key default gen_random_uuid(),
+document_id uuid references ai_knowledge_documents(id) on delete cascade,
+content text not null,
+embedding vector(1536),
+metadata jsonb default '{}',
+created_at timestamptz default now()
+);
+alter table ai_estates enable row level security;
+alter table ai_faqs enable row level security;
+alter table ai_conversations enable row level security;
+alter table ai_messages enable row level security;
+alter table ai_leads enable row level security;
+alter table ai_knowledge_documents enable row level security;
+4
+
+-- 4 of 38 --
+
+alter table ai_knowledge_chunks enable row level security;
+create policy "Public can read active estates"
+on ai_estates for select
+using (is_active = true);
+create policy "Public can read published faqs"
+on ai_faqs for select
+using (is_published = true);
+-- API writes should happen through the server using the service role key.
+-- Admin policies can be added later if the admin dashboard is connected to
+Supabase Auth.
+Optional seed data:
+insert into ai_estates (name, location, category, description, payment_plan,
+is_active)
+values
+('Kings Court Estate', 'FUNAAB Alabata Road, Ogun State', 'Residential /
+Investment', 'A Marxvest estate option around the FUNAAB Alabata axis.',
+'Flexible payment plan available. Confirm details with a consultant.', true),
+('Billionaires Court Estate', 'Ikorodu Ogijo-Sagamu Konigbagbe axis',
+'Residential / Investment', 'A Marxvest estate option around the Ikorodu, Ogijo
+and Sagamu growth corridor.', 'Flexible payment plan available. Confirm details
+with a consultant.', true),
+('EverRich Farmland', 'Ntoji, Ogunmakin, Ogun State', 'Farmland / Agriculture /
+Investment', 'A Marxvest farmland investment option at Ntoji, Ogunmakin, Ogun
+State.', 'Flexible payment plan available. Confirm details with a consultant.',
+true);
+insert into ai_faqs (question, answer, sort_order)
+values
+('What estates does Marxvest currently offer?', 'Marxvest currently presents
+Kings Court Estate, Billionaires Court Estate, and EverRich Farmland. A
+consultant should confirm current availability before purchase.', 1),
+('Does Marxvest offer installment payment?',
+'Marxvest mentions flexible payment options. Exact payment duration, deposit,
+and balance terms should be confirmed by a Marxvest consultant.', 2),
+('Can I inspect the land before buying?', 'Yes, interested buyers should speak
+with a Marxvest consultant to arrange an inspection.', 3),
+('How do I contact Marxvest?', 'You can contact Marxvest on WhatsApp or phone
+via +2349114712695 or email info@marxvestspec.com.', 4),
+('What documents will I receive after purchase?', 'Document details should be
+5
+
+-- 5 of 38 --
+
+confirmed by a Marxvest consultant before purchase. The assistant should not
+invent legal title information.', 5);
+4. Shared Types
+Create:
+types/ai-assistant.ts
+export type ChatRole = 'user' | 'assistant' | 'system';
+export type ChatMessage = {
+id: string;
+role: ChatRole;
+content: string;
+createdAt: string;
+};
+export type SuggestedPrompt = {
+id: string;
+label: string;
+prompt: string;
+};
+export type LeadPayload = {
+name: string;
+phone: string;
+email?: string;
+estateInterest?: string;
+budget?: string;
+buyingPurpose?: string;
+timeline?: string;
+conversationSummary?: string;
+};
+export type ChatApiRequest = {
+conversationId?: string | null;
+visitorId: string;
+message: string;
+pageUrl?: string;
+};
+export type ChatApiResponse = {
+6
+
+-- 6 of 38 --
+
+conversationId: string;
+reply: string;
+shouldCaptureLead: boolean;
+suggestedEstate: string | null;
+};
+5. Assistant Constants
+Create:
+lib/ai-assistant/constants.ts
+import type { SuggestedPrompt } from '@/types/ai-assistant';
+export const MARXVEST_WHATSAPP_NUMBER =
+process.env.NEXT_PUBLIC_MARXVEST_WHATSAPP_NUMBER || '2349114712695';
+export const MARXVEST_WHATSAPP_MESSAGE =
+'Hello Marxvest, I am interested in your real estate opportunities and would
+like to speak with a consultant.';
+export const MARXVEST_WHATSAPP_URL = `https://wa.me/${MARXVEST_WHATSAPP_NUMBER}?
+text=${encodeURIComponent(
+MARXVEST_WHATSAPP_MESSAGE,
+)}`;
+export const ASSISTANT_NAME = 'Marxvest Property Advisor';
+export const WELCOME_MESSAGE =
+'Hello, welcome to Marxvest. I can help you choose an estate, understand
+payment options, or connect you with a real estate consultant. What would you
+like to know?';
+export const SUGGESTED_PROMPTS: SuggestedPrompt[] = [
+{
+id: 'available-estates',
+label: 'Available estates',
+prompt: 'What estates does Marxvest currently offer?',
+},
+{
+id: 'payment-plan',
+label: 'Payment plans',
+prompt: 'Does Marxvest offer installment payment plans?',
+7
+
+-- 7 of 38 --
+
+},
+{
+id: 'buy-land',
+label: 'I want to buy land',
+prompt: 'I am interested in buying land. Can you guide me?',
+},
+{
+id: 'inspection',
+label: 'Book inspection',
+prompt: 'Can I inspect the property before buying?',
+},
+];
+6. Local Storage Helpers
+Create:
+lib/ai-assistant/local-storage.ts
+const VISITOR_ID_KEY = 'marxvest_ai_visitor_id';
+const CONVERSATION_ID_KEY = 'marxvest_ai_conversation_id';
+export function getOrCreateVisitorId(): string {
+if (typeof window === 'undefined') return 'server';
+const existing = window.localStorage.getItem(VISITOR_ID_KEY);
+if (existing) return existing;
+const visitorId = crypto.randomUUID();
+window.localStorage.setItem(VISITOR_ID_KEY, visitorId);
+return visitorId;
+}
+export function getStoredConversationId(): string | null {
+if (typeof window === 'undefined') return null;
+return window.localStorage.getItem(CONVERSATION_ID_KEY);
+}
+export function storeConversationId(conversationId: string): void {
+if (typeof window === 'undefined') return;
+window.localStorage.setItem(CONVERSATION_ID_KEY, conversationId);
+}
+8
+
+-- 8 of 38 --
+
+7. Frontend Chat Client
+Create:
+lib/ai-assistant/chat-client.ts
+import type { ChatApiRequest, ChatApiResponse, LeadPayload } from '@/types/ai-
+assistant';
+export async function sendAssistantMessage(
+payload: ChatApiRequest,
+): Promise<ChatApiResponse> {
+const response = await fetch('/api/ai-assistant/chat', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(payload),
+});
+if (!response.ok) {
+const errorText = await response.text().catch(() => '');
+throw new Error(errorText || 'Failed to send message to assistant');
+}
+return response.json();
+}
+export async function submitAssistantLead(
+payload: LeadPayload & { conversationId?: string | null },
+) {
+const response = await fetch('/api/ai-assistant/lead', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(payload),
+});
+if (!response.ok) {
+const errorText = await response.text().catch(() => '');
+throw new Error(errorText || 'Failed to submit lead');
+}
+9
+
+-- 9 of 38 --
+
+return response.json();
+}
+8. Supabase Server Client
+Create:
+lib/ai-assistant/supabase-server.ts
+import { createClient } from '@supabase/supabase-js';
+export function createSupabaseServiceClient() {
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!supabaseUrl || !serviceRoleKey) {
+throw new Error('Missing Supabase server environment variables');
+}
+return createClient(supabaseUrl, serviceRoleKey, {
+auth: {
+persistSession: false,
+autoRefreshToken: false,
+},
+});
+}
+9. Prompt Builder
+Create:
+lib/ai-assistant/prompt.ts
+export type AssistantContext = {
+estates: Array<{
+name: string;
+location: string | null;
+10
+
+-- 10 of 38 --
+
+category: string | null;
+description: string | null;
+payment_plan: string | null;
+title_document: string | null;
+starting_price: string | null;
+}>;
+faqs: Array<{
+question: string;
+answer: string;
+}>;
+};
+export function buildMarxvestSystemPrompt(context: AssistantContext): string {
+const estates = context.estates
+.map((estate) => {
+return [
+`Name: ${estate.name}`,
+estate.location ? `Location: ${estate.location}` : null,
+estate.category ? `Category: ${estate.category}` : null,
+estate.description ? `Description: ${estate.description}` : null,
+estate.payment_plan ? `Payment plan: ${estate.payment_plan}` : null,
+estate.title_document ? `Title document: ${estate.title_document}` :
+null,
+estate.starting_price ? `Starting price: ${estate.starting_price}` :
+null,
+]
+.filter(Boolean)
+.join('\n');
+})
+.join('\n\n');
+const faqs = context.faqs
+.map((faq) => `Q: ${faq.question}\nA: ${faq.answer}`)
+.join('\n\n');
+return `
+You are Marxvest Property Advisor, the AI sales and customer-care assistant for
+Marxvest.
+Your role:
+- Help website visitors understand Marxvest estates and real estate investment
+opportunities.
+- Act as a professional first-line sales representative and customer-care
+representative.
+- Qualify serious buyers and guide them toward WhatsApp consultation.
+- Answer only with approved information from the provided context.
+- Keep responses concise, clear, warm, and sales-focused.
+11
+
+-- 11 of 38 --
+
+Important rules:
+- Do not invent prices, land size, legal title, availability, discounts,
+allocation date, inspection date, or guarantees.
+- If information is missing, say a Marxvest consultant should confirm it.
+- Never make legal guarantees about land titles.
+- Never pressure the visitor aggressively.
+- Always be helpful and professional.
+- When the visitor shows buying intent, ask for their name and WhatsApp number
+or suggest continuing on WhatsApp.
+High-intent signals:
+- The visitor asks about price, payment, inspection, purchase process,
+availability, documents, location, buying land, investment, or speaking with a
+consultant.
+Qualification questions to ask when useful:
+- Are you buying for residential use, investment, agriculture, or land banking?
+- Which location are you interested in?
+- What is your budget range?
+- Do you prefer outright payment or installment?
+- When are you planning to buy?
+WhatsApp contact:
++2349114712695
+Approved Marxvest estate context:
+${estates || 'No estate context has been configured yet.'}
+Approved FAQs:
+${faqs || 'No FAQs have been configured yet.'}
+`.trim();
+}
+export function detectLeadIntent(message: string): boolean {
+const value = message.toLowerCase();
+const triggers = [
+'price',
+'cost',
+'how much',
+'buy',
+'purchase',
+'payment',
+'installment',
+'inspection',
+'inspect',
+'available',
+'availability',
+'document',
+12
+
+-- 12 of 38 --
+
+'title',
+'call me',
+'contact me',
+'whatsapp',
+'interested',
+'budget',
+'plot',
+'land',
+];
+return triggers.some((trigger) => value.includes(trigger));
+}
+export function suggestEstate(message: string): string | null {
+const value = message.toLowerCase();
+if (value.includes('farm') || value.includes('agriculture') ||
+value.includes('farmland')) {
+return 'EverRich Farmland';
+}
+if (value.includes('funaab') || value.includes('alabata')) {
+return 'Kings Court Estate';
+}
+if (
+value.includes('ikorodu') ||
+value.includes('ogijo') ||
+value.includes('sagamu') ||
+value.includes('konigbagbe')
+) {
+return 'Billionaires Court Estate';
+}
+return null;
+}
+10. Chat API Route
+Create:
+app/api/ai-assistant/chat/route.ts
+13
+
+-- 13 of 38 --
+
+import { NextResponse } from 'next/server';
+import OpenAI from 'openai';
+import { createSupabaseServiceClient } from '@/lib/ai-assistant/supabase-
+server';
+import {
+buildMarxvestSystemPrompt,
+detectLeadIntent,
+suggestEstate,
+} from '@/lib/ai-assistant/prompt';
+import type { ChatApiRequest } from '@/types/ai-assistant';
+export const runtime = 'nodejs';
+const openai = new OpenAI({
+apiKey: process.env.OPENAI_API_KEY,
+});
+function isValidMessage(message: unknown): message is string {
+return typeof message === 'string' && message.trim().length > 0 &&
+message.length <= 3000;
+}
+export async function POST(request: Request) {
+try {
+const body = (await request.json()) as ChatApiRequest;
+if (!isValidMessage(body.message)) {
+return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
+}
+const supabase = createSupabaseServiceClient();
+let conversationId = body.conversationId || null;
+if (!conversationId) {
+const { data: conversation, error: conversationError } = await supabase
+.from('ai_conversations')
+.insert({
+visitor_id: body.visitorId,
+page_url: body.pageUrl,
+source: 'website',
+})
+.select('id')
+.single();
+if (conversationError) throw conversationError;
+conversationId = conversation.id;
+14
+
+-- 14 of 38 --
+
+}
+await supabase.from('ai_messages').insert({
+conversation_id: conversationId,
+role: 'user',
+content: body.message.trim(),
+});
+const { data: estates } = await supabase
+.from('ai_estates')
+.select('name, location, category, description, payment_plan,
+title_document, starting_price')
+.eq('is_active', true)
+.order('created_at', { ascending: true });
+const { data: faqs } = await supabase
+.from('ai_faqs')
+.select('question, answer')
+.eq('is_published', true)
+.order('sort_order', { ascending: true })
+.limit(20);
+const { data: history } = await supabase
+.from('ai_messages')
+.select('role, content')
+.eq('conversation_id', conversationId)
+.order('created_at', { ascending: false })
+.limit(10);
+const orderedHistory = (history || []).reverse().map((message) => ({
+role: message.role as 'user' | 'assistant' | 'system',
+content: message.content as string,
+}));
+const systemPrompt = buildMarxvestSystemPrompt({
+estates: estates || [],
+faqs: faqs || [],
+});
+const completion = await openai.chat.completions.create({
+model: 'gpt-4.1-mini',
+temperature: 0.4,
+messages: [
+{ role: 'system', content: systemPrompt },
+...orderedHistory,
+{ role: 'user', content: body.message.trim() },
+],
+});
+15
+
+-- 15 of 38 --
+
+const reply =
+completion.choices[0]?.message?.content ||
+'I am sorry, I could not process that request. Please contact Marxvest on
+WhatsApp for assistance.';
+const shouldCaptureLead = detectLeadIntent(body.message);
+const suggestedEstate = suggestEstate(body.message);
+await supabase.from('ai_messages').insert({
+conversation_id: conversationId,
+role: 'assistant',
+content: reply,
+model: 'gpt-4.1-mini',
+metadata: {
+shouldCaptureLead,
+suggestedEstate,
+},
+});
+await supabase
+.from('ai_conversations')
+.update({ last_message_at: new Date().toISOString() })
+.eq('id', conversationId);
+return NextResponse.json({
+conversationId,
+reply,
+shouldCaptureLead,
+suggestedEstate,
+});
+} catch (error) {
+console.error('AI assistant chat error:', error);
+return NextResponse.json(
+{
+error: 'The assistant is temporarily unavailable. Please continue on
+WhatsApp.',
+},
+{ status: 500 },
+);
+}
+}
+16
+
+-- 16 of 38 --
+
+11. Lead API Route
+Create:
+app/api/ai-assistant/lead/route.ts
+import { NextResponse } from 'next/server';
+import { createSupabaseServiceClient } from '@/lib/ai-assistant/supabase-
+server';
+import type { LeadPayload } from '@/types/ai-assistant';
+type LeadRequest = LeadPayload & {
+conversationId?: string | null;
+};
+function clean(value: unknown): string | null {
+if (typeof value !== 'string') return null;
+const trimmed = value.trim();
+return trimmed.length > 0 ? trimmed : null;
+}
+export async function POST(request: Request) {
+try {
+const body = (await request.json()) as LeadRequest;
+const name = clean(body.name);
+const phone = clean(body.phone);
+if (!name || !phone) {
+return NextResponse.json(
+{ error: 'Name and WhatsApp number are required' },
+{ status: 400 },
+);
+}
+const supabase = createSupabaseServiceClient();
+const { data, error } = await supabase
+.from('ai_leads')
+.insert({
+conversation_id: body.conversationId || null,
+name,
+phone,
+email: clean(body.email),
+estate_interest: clean(body.estateInterest),
+17
+
+-- 17 of 38 --
+
+budget: clean(body.budget),
+buying_purpose: clean(body.buyingPurpose),
+timeline: clean(body.timeline),
+conversation_summary: clean(body.conversationSummary),
+source: 'website_assistant',
+})
+.select('id')
+.single();
+if (error) throw error;
+if (body.conversationId) {
+await supabase
+.from('ai_conversations')
+.update({ status: 'lead_captured' })
+.eq('id', body.conversationId);
+}
+return NextResponse.json({ ok: true, leadId: data.id });
+} catch (error) {
+console.error('AI assistant lead error:', error);
+return NextResponse.json({ error: 'Could not save lead' }, { status: 500 });
+}
+}
+12. Chat Button Component
+Create:
+components/ai-assistant/ChatButton.tsx
+'use client';
+import { MessageCircle, X } from 'lucide-react';
+type ChatButtonProps = {
+isOpen: boolean;
+onClick: () => void;
+};
+export default function ChatButton({ isOpen, onClick }: ChatButtonProps) {
+return (
+<button
+18
+
+-- 18 of 38 --
+
+type="button"
+onClick={onClick}
+aria-label={isOpen ? 'Close Marxvest assistant' : 'Open Marxvest
+assistant'}
+className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center
+justify-center rounded-full bg-emerald-700 text-white shadow-xl transition
+hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500
+focus:ring-offset-2"
+>
+{isOpen ? <X size={24} /> : <MessageCircle size={26} />}
+</button>
+);
+}
+13. Message Bubble Component
+Create:
+components/ai-assistant/MessageBubble.tsx
+'use client';
+import type { ChatMessage } from '@/types/ai-assistant';
+type MessageBubbleProps = {
+message: ChatMessage;
+};
+export default function MessageBubble({ message }: MessageBubbleProps) {
+const isUser = message.role === 'user';
+return (
+<div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+<div
+className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm leading-relaxed
+shadow-sm ${
+isUser
+? 'rounded-br-sm bg-emerald-700 text-white'
+: 'rounded-bl-sm bg-gray-100 text-gray-900'
+}`}
+>
+{message.content}
+</div>
+19
+
+-- 19 of 38 --
+
+</div>
+);
+}
+14. Prompt Chips Component
+Create:
+components/ai-assistant/PromptChips.tsx
+'use client';
+import { SUGGESTED_PROMPTS } from '@/lib/ai-assistant/constants';
+type PromptChipsProps = {
+onSelect: (prompt: string) => void;
+disabled?: boolean;
+};
+export default function PromptChips({ onSelect, disabled }: PromptChipsProps) {
+return (
+<div className="flex flex-wrap gap-2 px-4 pb-3">
+{SUGGESTED_PROMPTS.map((item) => (
+<button
+key={item.id}
+type="button"
+disabled={disabled}
+onClick={() => onSelect(item.prompt)}
+className="rounded-full border border-emerald-200 bg-emerald-50 px-3
+py-1 text-xs font-medium text-emerald-800 transition hover:bg-emerald-100
+disabled:cursor-not-allowed disabled:opacity-50"
+>
+{item.label}
+</button>
+))}
+</div>
+);
+}
+20
+
+-- 20 of 38 --
+
+15. WhatsApp CTA Component
+Create:
+components/ai-assistant/WhatsAppCTA.tsx
+'use client';
+import { MARXVEST_WHATSAPP_URL } from '@/lib/ai-assistant/constants';
+export default function WhatsAppCTA() {
+return (
+<a
+href={MARXVEST_WHATSAPP_URL}
+target="_blank"
+rel="noreferrer"
+className="block rounded-xl bg-green-600 px-4 py-3 text-center text-sm
+font-semibold text-white transition hover:bg-green-700"
+>
+Continue on WhatsApp
+</a>
+);
+}
+16. Lead Form Component
+Create:
+components/ai-assistant/LeadForm.tsx
+'use client';
+import { useState } from 'react';
+import { submitAssistantLead } from '@/lib/ai-assistant/chat-client';
+import type { LeadPayload } from '@/types/ai-assistant';
+import WhatsAppCTA from './WhatsAppCTA';
+type LeadFormProps = {
+conversationId?: string | null;
+onSubmitted?: () => void;
+21
+
+-- 21 of 38 --
+
+};
+export default function LeadForm({ conversationId, onSubmitted }:
+LeadFormProps) {
+const [form, setForm] = useState<LeadPayload>({
+name: '',
+phone: '',
+email: '',
+estateInterest: '',
+budget: '',
+buyingPurpose: '',
+timeline: '',
+});
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [submitted, setSubmitted] = useState(false);
+const [error, setError] = useState<string | null>(null);
+function updateField(name: keyof LeadPayload, value: string) {
+setForm((current) => ({ ...current, [name]: value }));
+}
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+event.preventDefault();
+setError(null);
+if (!form.name.trim() || !form.phone.trim()) {
+setError('Please provide your name and WhatsApp number.');
+return;
+}
+try {
+setIsSubmitting(true);
+await submitAssistantLead({ ...form, conversationId });
+setSubmitted(true);
+onSubmitted?.();
+} catch {
+setError('Could not submit your details. Please continue on WhatsApp
+instead.');
+} finally {
+setIsSubmitting(false);
+}
+}
+if (submitted) {
+return (
+<div className="space-y-3 rounded-2xl border border-emerald-100 bg-
+emerald-50 p-4">
+<p className="text-sm font-medium text-emerald-900">
+22
+
+-- 22 of 38 --
+
+Thank you. A Marxvest consultant can follow up with you shortly.
+</p>
+<WhatsAppCTA />
+</div>
+);
+}
+return (
+<form onSubmit={handleSubmit} className="space-y-3 rounded-2xl border
+border-gray-200 bg-white p-4">
+<div>
+<label className="mb-1 block text-xs font-medium text-gray-700">Name *</
+label>
+<input
+value={form.name}
+onChange={(event) => updateField('name', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+placeholder="Your full name"
+/>
+</div>
+<div>
+<label className="mb-1 block text-xs font-medium text-
+gray-700">WhatsApp number *</label>
+<input
+value={form.phone}
+onChange={(event) => updateField('phone', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+placeholder="e.g. 080..."
+/>
+</div>
+<div>
+<label className="mb-1 block text-xs font-medium text-gray-700">Email</
+label>
+<input
+type="email"
+value={form.email}
+onChange={(event) => updateField('email', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+placeholder="you@example.com"
+/>
+</div>
+<div>
+23
+
+-- 23 of 38 --
+
+<label className="mb-1 block text-xs font-medium text-gray-700">Estate
+interest</label>
+<select
+value={form.estateInterest}
+onChange={(event) => updateField('estateInterest',
+event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+>
+<option value="">Select estate</option>
+<option value="Kings Court Estate">Kings Court Estate</option>
+<option value="Billionaires Court Estate">Billionaires Court Estate</
+option>
+<option value="EverRich Farmland">EverRich Farmland</option>
+<option value="Not sure yet">Not sure yet</option>
+</select>
+</div>
+<div>
+<label className="mb-1 block text-xs font-medium text-gray-700">Budget
+range</label>
+<input
+value={form.budget}
+onChange={(event) => updateField('budget', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+placeholder="e.g. 2m - 5m"
+/>
+</div>
+<div>
+<label className="mb-1 block text-xs font-medium text-
+gray-700">Purpose</label>
+<select
+value={form.buyingPurpose}
+onChange={(event) => updateField('buyingPurpose', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+>
+<option value="">Select purpose</option>
+<option value="Residential">Residential</option>
+<option value="Investment">Investment</option>
+<option value="Agriculture">Agriculture</option>
+<option value="Land banking">Land banking</option>
+</select>
+</div>
+<div>
+24
+
+-- 24 of 38 --
+
+<label className="mb-1 block text-xs font-medium text-
+gray-700">Timeline</label>
+<select
+value={form.timeline}
+onChange={(event) => updateField('timeline', event.target.value)}
+className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+outline-none focus:border-emerald-600"
+>
+<option value="">Select timeline</option>
+<option value="Immediately">Immediately</option>
+<option value="This month">This month</option>
+<option value="1-3 months">1-3 months</option>
+<option value="Just researching">Just researching</option>
+</select>
+</div>
+{error && <p className="text-xs font-medium text-red-600">{error}</p>}
+<button
+type="submit"
+disabled={isSubmitting}
+className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-
+semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed
+disabled:opacity-60"
+>
+{isSubmitting ? 'Submitting...' : 'Submit my details'}
+</button>
+</form>
+);
+}
+17. Chat Window Component
+Create:
+components/ai-assistant/ChatWindow.tsx
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import type { ChatMessage } from '@/types/ai-assistant';
+import { ASSISTANT_NAME, WELCOME_MESSAGE } from '@/lib/ai-assistant/constants';
+import {
+25
+
+-- 25 of 38 --
+
+getOrCreateVisitorId,
+getStoredConversationId,
+storeConversationId,
+} from '@/lib/ai-assistant/local-storage';
+import { sendAssistantMessage } from '@/lib/ai-assistant/chat-client';
+import MessageBubble from './MessageBubble';
+import PromptChips from './PromptChips';
+import LeadForm from './LeadForm';
+import WhatsAppCTA from './WhatsAppCTA';
+type ChatWindowProps = {
+onClose: () => void;
+};
+function createMessage(role: ChatMessage['role'], content: string): ChatMessage
+{
+return {
+id: crypto.randomUUID(),
+role,
+content,
+createdAt: new Date().toISOString(),
+};
+}
+export default function ChatWindow({ onClose }: ChatWindowProps) {
+const [messages, setMessages] = useState<ChatMessage[]>([
+createMessage('assistant', WELCOME_MESSAGE),
+]);
+const [input, setInput] = useState('');
+const [conversationId, setConversationId] = useState<string | null>(null);
+const [isSending, setIsSending] = useState(false);
+const [showLeadForm, setShowLeadForm] = useState(false);
+const [error, setError] = useState<string | null>(null);
+const scrollRef = useRef<HTMLDivElement | null>(null);
+useEffect(() => {
+setConversationId(getStoredConversationId());
+}, []);
+useEffect(() => {
+scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+}, [messages, showLeadForm]);
+async function sendMessage(rawMessage?: string) {
+const message = (rawMessage || input).trim();
+if (!message || isSending) return;
+const userMessage = createMessage('user', message);
+26
+
+-- 26 of 38 --
+
+setMessages((current) => [...current, userMessage]);
+setInput('');
+setIsSending(true);
+setError(null);
+try {
+const visitorId = getOrCreateVisitorId();
+const response = await sendAssistantMessage({
+conversationId,
+visitorId,
+message,
+pageUrl: typeof window !== 'undefined' ? window.location.href :
+undefined,
+});
+if (response.conversationId && response.conversationId !==
+conversationId) {
+setConversationId(response.conversationId);
+storeConversationId(response.conversationId);
+}
+setMessages((current) => [...current, createMessage('assistant',
+response.reply)]);
+if (response.shouldCaptureLead) {
+setShowLeadForm(true);
+}
+} catch {
+setError('The assistant is temporarily unavailable. You can continue on
+WhatsApp.');
+} finally {
+setIsSending(false);
+}
+}
+function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+event.preventDefault();
+void sendMessage();
+}
+return (
+<section
+className="fixed bottom-24 right-5 z-50 flex h-[75vh] max-h-[680px] w-
+[calc(100vw-2.5rem)] max-w-md flex-col overflow-hidden rounded-3xl border
+border-gray-200 bg-white shadow-2xl">
+<header className="flex items-center justify-between bg-emerald-800 px-5
+py-4 text-white">
+<div>
+27
+
+-- 27 of 38 --
+
+<h2 className="text-sm font-semibold">{ASSISTANT_NAME}</h2>
+<p className="text-xs text-emerald-100">Sales and support assistant</
+p>
+</div>
+<button
+type="button"
+onClick={onClose}
+className="rounded-full px-2 py-1 text-xl leading-none text-white/90
+hover:bg-white/10"
+aria-label="Close assistant"
+>
+×
+</button>
+</header>
+<div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+{messages.map((message) => (
+<MessageBubble key={message.id} message={message} />
+))}
+{isSending && (
+<div className="flex justify-start">
+<div className="rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-2
+text-sm text-gray-600">
+Marxvest assistant is typing...
+</div>
+</div>
+)}
+{showLeadForm && (
+<div className="space-y-3">
+<p className="text-sm text-gray-700">
+To help you better, please leave your details and a Marxvest
+consultant can follow up.
+</p>
+<LeadForm conversationId={conversationId} />
+</div>
+)}
+{error && (
+<div className="space-y-3 rounded-2xl border border-red-100 bg-red-50
+p-4">
+<p className="text-sm font-medium text-red-700">{error}</p>
+<WhatsAppCTA />
+</div>
+)}
+<div ref={scrollRef} />
+28
+
+-- 28 of 38 --
+
+</div>
+<PromptChips onSelect={(prompt) => void sendMessage(prompt)}
+disabled={isSending} />
+<div className="border-t border-gray-200 p-4">
+<form onSubmit={handleSubmit} className="flex gap-2">
+<input
+value={input}
+onChange={(event) => setInput(event.target.value)}
+disabled={isSending}
+className="min-w-0 flex-1 rounded-xl border border-gray-300 px-3
+py-3 text-sm outline-none focus:border-emerald-600 disabled:cursor-not-allowed
+disabled:opacity-60"
+placeholder="Ask about estates, payment, inspection..."
+/>
+<button
+type="submit"
+disabled={isSending || !input.trim()}
+className="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white
+transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+>
+Send
+</button>
+</form>
+</div>
+</section>
+);
+}
+18. Main Chat Widget Component
+Create:
+components/ai-assistant/ChatWidget.tsx
+'use client';
+import { useState } from 'react';
+import ChatButton from './ChatButton';
+import ChatWindow from './ChatWindow';
+29
+
+-- 29 of 38 --
+
+export default function ChatWidget() {
+const [isOpen, setIsOpen] = useState(false);
+return (
+<>
+{isOpen && <ChatWindow onClose={() => setIsOpen(false)} />}
+<ChatButton isOpen={isOpen} onClick={() => setIsOpen((current) => !
+current)} />
+</>
+);
+}
+19. Add the Widget to the Site Layout
+Find the main layout file.
+For Next.js App Router, usually:
+app/layout.tsx
+Add:
+import ChatWidget from '@/components/ai-assistant/ChatWidget';
+Then render it before the closing body tag:
+<body>
+{children}
+<ChatWidget />
+</body>
+Example:
+import type { Metadata } from 'next';
+import ChatWidget from '@/components/ai-assistant/ChatWidget';
+import './globals.css';
+export const metadata: Metadata = {
+title: 'Marxvest Real Estate',
+description: 'Marxvest real estate and investment opportunities',
+30
+
+-- 30 of 38 --
+
+};
+export default function RootLayout({ children }: { children: React.ReactNode })
+{
+return (
+<html lang="en">
+<body>
+{children}
+<ChatWidget />
+</body>
+</html>
+);
+}
+If the existing layout already has providers, keep them. Only add <ChatWidget /> inside the provider
+tree if needed.
+20. Optional: Simple Admin Leads Page
+If the project has an admin area, add a leads page later.
+For now, leads can be viewed directly in Supabase table ai_leads .
+Suggested columns to show:
+name
+phone
+email
+estate_interest
+budget
+buying_purpose
+timeline
+status
+created_at
+21. Optional: WhatsApp API Integration Later
+The initial version uses a WhatsApp redirect link.
+Full WhatsApp automation should be v2:
+•
+•
+•
+•
+•
+•
+•
+•
+•
+31
+
+-- 31 of 38 --
+
+app/api/ai-assistant/whatsapp/webhook/route.ts
+Flow:
+WhatsApp sends incoming message to webhook.
+API loads conversation by WhatsApp number.
+API calls the same Marxvest assistant logic.
+API sends reply through WhatsApp Cloud API or Twilio.
+API saves messages and leads to Supabase.
+Do not add full WhatsApp API until the website assistant is stable.
+22. Testing Checklist
+After integration, test:
+Site still loads normally.
+Chat button appears bottom-right.
+Chat window opens and closes.
+Suggested prompts work.
+User message calls /api/ai-assistant/chat .
+Conversation is saved to ai_conversations .
+Messages are saved to ai_messages .
+Lead form appears after high-intent questions.
+Lead form saves to ai_leads .
+WhatsApp button opens the correct Marxvest number.
+Assistant does not invent prices.
+Assistant asks a consultant to confirm uncertain details.
+Mobile layout is usable.
+Existing pages are unaffected.
+23. Codex Integration Prompt
+Copy and paste this full prompt into Codex.
+You are working on the Marxvest real estate website codebase.
+Your task is to add an isolated AI sales and customer-care assistant to the site
+without breaking or rewriting the existing website.
+Important goals:
+1.
+2.
+3.
+4.
+5.
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+11.
+12.
+13.
+14.
+32
+
+-- 32 of 38 --
+
+- Add a floating AI assistant widget to the site.
+- The assistant should behave as Marxvest Property Advisor.
+- It should answer questions about Marxvest estates, payment plans, inspection,
+purchase process, and consultation.
+- It should qualify leads and collect buyer details.
+- It should push serious users to WhatsApp.
+- It must not invent prices, land sizes, legal titles, discounts, or
+availability.
+- It must not rewrite the existing pages, navbar, estate cards, footer, or
+design system.
+- Keep all new files isolated under ai-assistant folders.
+First, inspect the codebase structure.
+Determine whether the project uses:
+- Next.js App Router
+- Next.js Pages Router
+- Vite React
+- plain React
+If it uses Next.js App Router:
+- Add API routes under app/api/ai-assistant/chat/route.ts and app/api/ai-
+assistant/lead/route.ts.
+- Add the widget to app/layout.tsx.
+If it uses Next.js Pages Router:
+- Convert the API route code into pages/api/ai-assistant/chat.ts and pages/api/
+ai-assistant/lead.ts.
+- Add the widget in _app.tsx or the main layout component.
+If it uses Vite or plain React:
+- Add only the frontend widget files.
+- Do not add Next.js API routes.
+- Create a clear note that backend endpoints must be implemented separately in
+NestJS or another server.
+Add these frontend files:
+- components/ai-assistant/ChatWidget.tsx
+- components/ai-assistant/ChatButton.tsx
+- components/ai-assistant/ChatWindow.tsx
+- components/ai-assistant/MessageBubble.tsx
+- components/ai-assistant/PromptChips.tsx
+- components/ai-assistant/LeadForm.tsx
+- components/ai-assistant/WhatsAppCTA.tsx
+- lib/ai-assistant/constants.ts
+- lib/ai-assistant/local-storage.ts
+- lib/ai-assistant/chat-client.ts
+- types/ai-assistant.ts
+33
+
+-- 33 of 38 --
+
+If the codebase uses src/, place the folders under src/.
+If it does not use src/, place them at the root-level structure.
+Preserve existing import alias rules. If @/ is not configured, use relative
+imports.
+Add server-side files only if this is a Next.js project:
+- lib/ai-assistant/supabase-server.ts
+- lib/ai-assistant/prompt.ts
+- app/api/ai-assistant/chat/route.ts
+- app/api/ai-assistant/lead/route.ts
+Install dependencies if not present:
+- openai
+- @supabase/supabase-js
+- lucide-react
+Use the existing package manager based on lockfile:
+- pnpm-lock.yaml means pnpm
+- package-lock.json means npm
+- yarn.lock means yarn
+Add or document these required environment variables:
+- OPENAI_API_KEY
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+- NEXT_PUBLIC_MARXVEST_WHATSAPP_NUMBER=2349114712695
+Do not expose SUPABASE_SERVICE_ROLE_KEY to the browser.
+Create a Supabase migration file if a supabase folder exists:
+- supabase/migrations/001_ai_assistant.sql
+Use ai_ table prefixes:
+- ai_estates
+- ai_faqs
+- ai_conversations
+- ai_messages
+- ai_leads
+- ai_knowledge_documents
+- ai_knowledge_chunks
+Add starter seed rows for:
+- Kings Court Estate
+- Billionaires Court Estate
+- EverRich Farmland
+34
+
+-- 34 of 38 --
+
+Add starter FAQs for:
+- available estates
+- installment payment
+- inspection
+- contact details
+- purchase documents
+Assistant behavior:
+- Name: Marxvest Property Advisor
+- Tone: professional, warm, concise, sales-oriented
+- It should act like a first-line sales representative and customer care
+representative.
+- It should ask qualifying questions when the user wants to buy.
+- It should collect lead details only when the user shows interest.
+- It should offer WhatsApp handoff for high-intent users.
+- It should say a Marxvest consultant needs to confirm uncertain details.
+High-intent triggers:
+- price
+- cost
+- how much
+- buy
+- purchase
+- payment
+- installment
+- inspection
+- inspect
+- available
+- availability
+- document
+- title
+- call me
+- contact me
+- whatsapp
+- interested
+- budget
+- plot
+- land
+Frontend UI requirements:
+- Floating button bottom-right.
+- Chat window should be mobile-friendly.
+- Use Tailwind classes if Tailwind is already used.
+- Do not introduce a new styling system if the project already uses Tailwind.
+- If Tailwind is not used, create a CSS module or plain CSS file for the widget.
+- The widget should not block page content.
+- The widget should have high z-index.
+- It should include suggested prompt chips.
+35
+
+-- 35 of 38 --
+
+- It should include a lead capture form.
+- It should include a WhatsApp CTA.
+Safety requirements:
+- Do not call OpenAI directly from client components.
+- Do not leak API keys.
+- Validate incoming chat messages.
+- Limit message length to prevent abuse.
+- Catch API errors and show WhatsApp fallback.
+- Keep the assistant functional even if Supabase or OpenAI fails.
+Integration requirements:
+- Add <ChatWidget /> once in the main layout.
+- Do not add it individually to every page.
+- Do not modify unrelated components.
+- Do not remove existing code.
+- Do not rename existing routes.
+- Do not alter existing Supabase tables.
+- Do not change the existing deployment setup beyond documenting env vars.
+After coding, run:
+- TypeScript check if available
+- lint if available
+- build if available
+Fix any import path, type, or lint errors introduced by the new assistant.
+Finally, provide a summary of:
+- files added
+- files modified
+- environment variables needed
+- Supabase migration needed
+- how to test the assistant manually
+- any assumptions made about the codebase
+24. Notes for NestJS Backend Alternative
+If you prefer NestJS instead of Next.js API routes, create:
+src/modules/ai-assistant/
+├── ai-assistant.module.ts
+├── ai-assistant.controller.ts
+├── ai-assistant.service.ts
+├── prompt.builder.ts
+36
+
+-- 36 of 38 --
+
+├── lead.service.ts
+└── dto/
+├── chat-message.dto.ts
+└── create-lead.dto.ts
+NestJS endpoints:
+POST /ai-assistant/chat
+POST /ai-assistant/lead
+Then update frontend chat-client.ts to call your NestJS API base URL:
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+fetch(`${API_BASE_URL}/ai-assistant/chat`, ...)
+Use this if the website is only frontend and your backend is separate.
+25. Final Recommended Rollout
+Phase 1:
+Add widget frontend.
+Add WhatsApp CTA.
+Add simple AI chat endpoint.
+Save leads to Supabase.
+Phase 2:
+Add admin dashboard for leads.
+Add estate management.
+Add FAQ management.
+Phase 3:
+Add document uploads and RAG.
+Add WhatsApp Cloud API or Twilio webhook.
+Add human handoff dashboard.
+For Marxvest, the most important KPI is not chat volume.
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+37
+
+-- 37 of 38 --
+
+Track:
+WhatsApp clicks
+leads captured
+estate interest
+budget range
+consultation requests
+repeated objections/questions
+•
+•
+•
+•
+•
+•
+38
+
+-- 38 of 38 --
+
