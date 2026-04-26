@@ -68,11 +68,11 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
                 ) : (
                   <>
                     <Link
-                      href="/contact"
+                      href="/partnership"
                       className="hidden h-11 items-center gap-2 rounded-full border border-[rgba(255,255,255,0.42)] bg-[linear-gradient(135deg,rgba(9,23,68,0.96),rgba(16,39,101,0.92))] px-4.5 text-[0.74rem] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_26px_rgba(7,18,45,0.16),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition duration-300 hover:-translate-y-px hover:border-[rgba(233,217,189,0.52)] hover:shadow-[0_16px_34px_rgba(7,18,45,0.22),inset_0_1px_0_rgba(255,255,255,0.16)] lg:inline-flex"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-sand)]" />
-                      Contact Marxvest
+                      Partner With Us
                     </Link>
                     <MobileNavMenu />
                   </>

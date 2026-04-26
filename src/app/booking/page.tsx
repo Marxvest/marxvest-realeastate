@@ -30,6 +30,9 @@ export default async function BookingPage({ searchParams }: BookingPageProps) {
             Marxvest team confirm the next step for location review,
             documentation guidance, and payment discussions.
           </p>
+          <div className="rounded-[1.8rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-5 text-sm leading-7 text-[var(--brand-text-muted)]">
+            The inspection request captures the same operational details the Marxvest field team uses for planning, reminders, and estate follow-up. Fill it once and the team can prepare your site visit properly.
+          </div>
           <div className="space-y-3 text-base text-[var(--brand-text-muted)]">
             <p>{company.phone}</p>
             <p>{company.email}</p>

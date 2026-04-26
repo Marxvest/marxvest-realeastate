@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { buildNoIndexMetadata } from "@/lib/seo";
 import { getSession } from "@/lib/auth";
+import { getFormSubmissionSummary } from "@/lib/form-submissions";
 import { auditEvents, homepageBanners, openInquiries } from "@/lib/site-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = buildNoIndexMetadata(
   "Admin",
@@ -15,6 +19,22 @@ export default async function AdminPage() {
 
   if (!session || session.role !== "admin") {
     redirect("/account");
+  }
+
+  let submissionSummary = {
+    bookingRequests: 0,
+    partnerRegistrations: 0,
+    configured: false,
+  };
+  let submissionError = "";
+
+  try {
+    submissionSummary = await getFormSubmissionSummary();
+  } catch (error) {
+    submissionError =
+      error instanceof Error
+        ? error.message
+        : "Unable to load form submission summary.";
   }
 
   return (
@@ -32,6 +52,52 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
+          <section className="rounded-[2.2rem] border border-[var(--brand-border)] bg-white p-8">
+            <div className="text-xs uppercase tracking-[0.28em] text-[var(--brand-primary)]">
+              Form submissions
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/admin/bookings"
+                className="rounded-[1.4rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-5 py-5 transition hover:border-[var(--brand-primary)]"
+              >
+                <div className="text-sm uppercase tracking-[0.18em] text-[var(--brand-primary)]">
+                  Booking requests
+                </div>
+                <div className="mt-3 text-3xl font-semibold text-[var(--brand-text)]">
+                  {submissionSummary.bookingRequests}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[var(--brand-text-muted)]">
+                  View inspection submissions from the website booking page.
+                </p>
+              </Link>
+              <Link
+                href="/admin/partners"
+                className="rounded-[1.4rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-5 py-5 transition hover:border-[var(--brand-primary)]"
+              >
+                <div className="text-sm uppercase tracking-[0.18em] text-[var(--brand-primary)]">
+                  Partner registrations
+                </div>
+                <div className="mt-3 text-3xl font-semibold text-[var(--brand-text)]">
+                  {submissionSummary.partnerRegistrations}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[var(--brand-text-muted)]">
+                  Review realtor and marketer onboarding entries.
+                </p>
+              </Link>
+            </div>
+            {!submissionSummary.configured ? (
+              <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
+                Supabase form storage is not configured. Website forms will not be accepted until the service role connection is available.
+              </p>
+            ) : null}
+            {submissionError ? (
+              <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
+                {submissionError}
+              </p>
+            ) : null}
+          </section>
+
           <section className="rounded-[2.2rem] border border-[var(--brand-border)] bg-white p-8">
             <div className="text-xs uppercase tracking-[0.28em] text-[var(--brand-primary)]">
               Inquiries

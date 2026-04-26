@@ -11,10 +11,12 @@ export default function ChatWidget() {
   return (
     <>
       {isOpen ? <ChatWindow onClose={() => setIsOpen(false)} /> : null}
-      <ChatButton
-        isOpen={isOpen}
-        onClick={() => setIsOpen((current) => !current)}
-      />
+      {!isOpen ? (
+        <ChatButton
+          isOpen={isOpen}
+          onClick={() => setIsOpen((current) => !current)}
+        />
+      ) : null}
     </>
   );
 }

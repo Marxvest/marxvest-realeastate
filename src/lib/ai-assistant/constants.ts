@@ -13,7 +13,7 @@ export const MARXVEST_WHATSAPP_URL = `https://wa.me/${MARXVEST_WHATSAPP_NUMBER}?
 export const ASSISTANT_NAME = "Marxvest Property Advisor";
 
 export const WELCOME_MESSAGE =
-  "Hello, welcome to Marxvest. I can help you choose an estate, understand payment options, or connect you with a real estate consultant. What would you like to know?";
+  "Hi, I can help with available estates, payment plans, inspections, and the next steps for buying land through Marxvest.";
 
 export const SUGGESTED_PROMPTS: SuggestedPrompt[] = [
   {

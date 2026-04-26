@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { House, SendHorizonal } from "lucide-react";
 
 import { ASSISTANT_NAME, WELCOME_MESSAGE } from "@/lib/ai-assistant/constants";
 import { sendAssistantMessage } from "@/lib/ai-assistant/chat-client";
@@ -96,77 +97,106 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
   }
 
   return (
-    <section className="fixed bottom-[5.5rem] right-4 z-[70] flex h-[75vh] max-h-[680px] w-[calc(100vw-2rem)] max-w-md flex-col overflow-hidden rounded-3xl border border-[var(--brand-border)] bg-white shadow-[0_30px_90px_rgba(7,18,45,0.22)] sm:bottom-[14.8rem] sm:right-7">
-      <header className="flex items-center justify-between bg-[var(--brand-primary-dark)] px-5 py-4 text-white">
-        <div>
-          <h2 className="text-sm font-semibold">{ASSISTANT_NAME}</h2>
-          <p className="text-xs text-white/72">Sales and support assistant</p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-full px-2 py-1 text-xl leading-none text-white/90 hover:bg-white/10"
-          aria-label="Close assistant"
-        >
-          ×
-        </button>
-      </header>
-
-      <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
-        ))}
-
-        {isSending ? (
-          <div className="flex justify-start">
-            <div className="rounded-2xl rounded-bl-sm bg-[var(--brand-surface)] px-4 py-2 text-sm text-[var(--brand-text-muted)]">
-              Marxvest assistant is typing...
-            </div>
-          </div>
-        ) : null}
-
-        {showLeadForm ? (
-          <div className="space-y-3">
-            <p className="text-sm text-[var(--brand-text-muted)]">
-              To help you better, please leave your details and a Marxvest consultant can follow up.
-            </p>
-            <LeadForm conversationId={conversationId} />
-          </div>
-        ) : null}
-
-        {error ? (
-          <div className="space-y-3 rounded-2xl border border-[rgba(181,39,79,0.16)] bg-[rgba(181,39,79,0.06)] p-4">
-            <p className="text-sm font-medium text-[var(--brand-danger)]">{error}</p>
-            <WhatsAppCTA />
-          </div>
-        ) : null}
-
-        <div ref={scrollRef} />
-      </div>
-
-      <PromptChips
-        onSelect={(prompt) => void sendMessage(prompt)}
-        disabled={isSending}
+    <>
+      <div
+        className="fixed inset-0 z-[75] bg-[rgba(7,18,45,0.18)] backdrop-blur-[2px] sm:bg-transparent sm:backdrop-blur-0"
+        aria-hidden="true"
       />
 
-      <div className="border-t border-[var(--brand-border)] p-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            disabled={isSending}
-            className="min-w-0 flex-1 rounded-xl border border-[var(--brand-border-strong)] px-3 py-3 text-sm outline-none focus:border-[var(--brand-primary)] disabled:cursor-not-allowed disabled:opacity-60"
-            placeholder="Ask about estates, payment, inspection..."
-          />
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-label={ASSISTANT_NAME}
+        className="fixed inset-0 z-[80] flex h-[100svh] w-screen flex-col bg-white sm:inset-auto sm:bottom-[14.8rem] sm:right-7 sm:h-[min(78vh,720px)] sm:w-[26rem] sm:max-w-[calc(100vw-3.5rem)] sm:overflow-hidden sm:rounded-[2rem] sm:border sm:border-[var(--brand-border)] sm:shadow-[0_30px_90px_rgba(7,18,45,0.22)]"
+      >
+        <header className="flex items-center justify-between bg-[var(--brand-primary-dark)] px-5 py-5 text-white sm:px-5 sm:py-4">
+          <div className="flex min-w-0 items-center gap-3.5">
+            <div className="flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full border border-[rgba(88,165,255,0.5)] bg-[linear-gradient(180deg,rgba(16,36,89,0.92)_0%,rgba(8,18,52,1)_100%)] shadow-[0_14px_32px_rgba(0,0,0,0.18)]">
+              <House className="h-5 w-5 text-white" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="truncate text-[1.18rem] font-semibold leading-none sm:text-sm">
+                {ASSISTANT_NAME}
+              </h2>
+              <p className="mt-1 text-[0.98rem] text-white/72 sm:text-xs">
+                Sales and support assistant
+              </p>
+            </div>
+          </div>
           <button
-            type="submit"
-            disabled={isSending || !input.trim()}
-            className="rounded-xl bg-[var(--brand-primary-dark)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-white/90 transition hover:bg-white/10"
+            aria-label="Close assistant"
           >
-            Send
+            ×
           </button>
-        </form>
-      </div>
-    </section>
+        </header>
+
+        <div className="flex-1 overflow-y-auto bg-[linear-gradient(180deg,#ffffff_0%,#fbfcff_100%)] px-5 py-6 sm:px-4 sm:py-4">
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <MessageBubble key={message.id} message={message} />
+            ))}
+
+            {isSending ? (
+              <div className="flex items-end gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-dark)] text-white shadow-[0_12px_28px_rgba(7,18,45,0.16)]">
+                  <House className="h-[1.125rem] w-[1.125rem]" />
+                </div>
+                <div className="rounded-[1.55rem] rounded-bl-md border border-[rgba(12,27,89,0.06)] bg-[var(--brand-surface)] px-4 py-3 text-[0.98rem] text-[var(--brand-text-muted)] shadow-[0_14px_34px_rgba(7,18,45,0.06)] sm:text-sm">
+                  Marxvest assistant is typing...
+                </div>
+              </div>
+            ) : null}
+
+            {showLeadForm ? (
+              <div className="space-y-3 rounded-[1.7rem] border border-[var(--brand-border)] bg-white p-4 shadow-[0_14px_34px_rgba(7,18,45,0.05)]">
+                <p className="text-sm leading-7 text-[var(--brand-text-muted)]">
+                  To help you better, please leave your details and a Marxvest consultant can follow up.
+                </p>
+                <LeadForm conversationId={conversationId} />
+              </div>
+            ) : null}
+
+            {error ? (
+              <div className="space-y-3 rounded-[1.7rem] border border-[rgba(181,39,79,0.16)] bg-[rgba(181,39,79,0.06)] p-4">
+                <p className="text-sm font-medium text-[var(--brand-danger)]">{error}</p>
+                <WhatsAppCTA />
+              </div>
+            ) : null}
+
+            <div ref={scrollRef} />
+          </div>
+        </div>
+
+        <div className="border-t border-[var(--brand-border)] bg-white">
+          <PromptChips
+            onSelect={(prompt) => void sendMessage(prompt)}
+            disabled={isSending}
+          />
+
+          <div className="border-t border-[var(--brand-border)] px-5 py-4 sm:px-4">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <input
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                disabled={isSending}
+                className="min-w-0 flex-1 rounded-[1.35rem] border border-[var(--brand-border-strong)] px-4 py-3.5 text-[1rem] text-[var(--brand-text)] outline-none transition focus:border-[var(--brand-primary)] disabled:cursor-not-allowed disabled:opacity-60 sm:rounded-xl sm:px-3 sm:py-3 sm:text-sm"
+                placeholder="Type your question..."
+              />
+              <button
+                type="submit"
+                disabled={isSending || !input.trim()}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[1.35rem] bg-[linear-gradient(180deg,#2d5ef4_0%,#1d4ed8_100%)] px-5 py-3.5 text-[1rem] font-semibold text-white shadow-[0_16px_32px_rgba(29,78,216,0.24)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_36px_rgba(29,78,216,0.28)] disabled:cursor-not-allowed disabled:opacity-60 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
+              >
+                <SendHorizonal className="h-[1.125rem] w-[1.125rem]" />
+                <span>Send</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

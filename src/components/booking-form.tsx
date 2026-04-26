@@ -32,7 +32,7 @@ export function BookingForm({
       </div>
       <div>
         <label htmlFor="booking-phone" className="block text-sm font-semibold text-[var(--brand-text)]">
-          Phone <span aria-hidden="true">*</span>
+          Phone (WhatsApp) <span aria-hidden="true">*</span>
         </label>
         <input
           id="booking-phone"
@@ -54,6 +54,19 @@ export function BookingForm({
           autoComplete="email"
           required
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
+        />
+      </div>
+      <div>
+        <label htmlFor="booking-coming-from" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Where are you coming from? <span aria-hidden="true">*</span>
+        </label>
+        <input
+          id="booking-coming-from"
+          type="text"
+          name="comingFrom"
+          required
+          className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
+          placeholder="e.g. Lagos, Abeokuta, Ikorodu"
         />
       </div>
       <div>
@@ -89,6 +102,46 @@ export function BookingForm({
           ))}
         </select>
       </div>
+      <div>
+        <label htmlFor="booking-reminder-channel" className="block text-sm font-semibold text-[var(--brand-text)]">
+          Best reminder channel <span aria-hidden="true">*</span>
+        </label>
+        <select
+          id="booking-reminder-channel"
+          name="reminderChannel"
+          required
+          defaultValue=""
+          className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
+        >
+          <option value="" disabled>
+            Select reminder option
+          </option>
+          <option value="Email">Email</option>
+          <option value="Phone call">Phone call</option>
+          <option value="WhatsApp">WhatsApp</option>
+        </select>
+      </div>
+      <div>
+        <label htmlFor="booking-referral-source" className="block text-sm font-semibold text-[var(--brand-text)]">
+          How did you hear about Marxvest? <span aria-hidden="true">*</span>
+        </label>
+        <select
+          id="booking-referral-source"
+          name="referralSource"
+          required
+          defaultValue=""
+          className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
+        >
+          <option value="" disabled>
+            Select source
+          </option>
+          <option value="Marxvest Realtor">Marxvest Realtor</option>
+          <option value="Social media Platforms">Social media Platforms</option>
+          <option value="Radio/Tv">Radio/Tv</option>
+          <option value="Church/Mosque">Church/Mosque</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
       <div className="sm:col-span-2">
         <label htmlFor="booking-message" className="block text-sm font-semibold text-[var(--brand-text)]">
           Notes
@@ -100,6 +153,21 @@ export function BookingForm({
           className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-white px-4 py-3"
           defaultValue="I would like to schedule a site inspection and discuss pricing, documentation, and next steps."
         />
+      </div>
+      <div className="sm:col-span-2 rounded-[1.4rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4">
+        <label htmlFor="booking-preparation" className="flex items-start gap-3 text-sm text-[var(--brand-text-muted)]">
+          <input
+            id="booking-preparation"
+            type="checkbox"
+            name="preparationAcknowledged"
+            value="yes"
+            required
+            className="mt-1 h-4 w-4 rounded border border-[var(--brand-border-strong)]"
+          />
+          <span>
+            I understand the Marxvest team prepares ahead once this inspection request is submitted.
+          </span>
+        </label>
       </div>
       {success ? (
         <p role="status" aria-live="polite" className="sm:col-span-2 text-sm text-[var(--brand-primary)]">

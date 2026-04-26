@@ -163,3 +163,39 @@ export type SessionPayload = {
   displayName: string;
   exp: number;
 };
+
+export type BookingRequest = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  comingFrom: string;
+  preferredDate: string;
+  listingSlug: string;
+  listingTitle?: string;
+  reminderChannel: "Email" | "Phone call" | "WhatsApp";
+  referralSource: string;
+  message?: string;
+  preparationAcknowledged: boolean;
+  status: "new" | "contacted" | "scheduled" | "closed";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PartnerRegistration = {
+  id: string;
+  surname: string;
+  otherNames: string;
+  maritalStatus: string;
+  phone: string;
+  dateOfBirth: string;
+  residentialAddress: string;
+  occupation: string;
+  email: string;
+  uplineName: string;
+  accountDetails: string;
+  affirmation: string;
+  status: "new" | "reviewing" | "approved" | "rejected";
+  createdAt: string;
+  updatedAt: string;
+};
