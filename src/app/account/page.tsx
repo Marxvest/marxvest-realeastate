@@ -31,10 +31,10 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
             Buyer support continues through guided next steps.
           </h1>
           <p className="text-lg leading-8 text-[var(--brand-text-muted)]">
-            Marxvest currently supports active buyers through direct advisor
-            contact, guided site inspections, and document review conversations.
-            Use the links below when you need clarification on an estate or want
-            to schedule the next step in your purchase journey.
+            Marxvest now handles confirmed buyer document release through
+            private secure links issued directly by the team. Use the links
+            below when you need support with inspections, document access, or
+            the next step in your purchase journey.
           </p>
         </div>
 
@@ -46,8 +46,8 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
               </div>
               <p className="text-base leading-7 text-[var(--brand-text-muted)]">
                 Speak with an advisor for estate questions, pricing guidance,
-                documentation support, and inspection planning before payment or
-                allocation discussions continue.
+                inspection planning, or secure document release after Marxvest
+                has manually confirmed your record.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
@@ -61,6 +61,12 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
                   className="inline-flex items-center justify-center rounded-full border border-[var(--brand-border-strong)] px-5 py-3 text-sm font-semibold text-[var(--brand-text)] transition hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
                 >
                   Book a site inspection
+                </Link>
+                <Link
+                  href="/buyer-access"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--brand-border-strong)] px-5 py-3 text-sm font-semibold text-[var(--brand-text)] transition hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
+                >
+                  Confirmed buyer access
                 </Link>
               </div>
             </div>

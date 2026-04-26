@@ -10,7 +10,7 @@ export function WhatsAppWidget() {
       target="_blank"
       rel="noreferrer"
       aria-label="Open WhatsApp chat with Marxvest"
-      className="fixed bottom-[4.6rem] right-4 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-[#1fa855] text-white shadow-[0_24px_60px_rgba(10,21,52,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(10,21,52,0.35)] sm:bottom-[6.9rem] sm:right-7 sm:h-12 sm:w-12"
+      className="fixed bottom-3 right-28 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-[#1fa855] text-white shadow-[0_24px_60px_rgba(10,21,52,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(10,21,52,0.35)] sm:bottom-[6.9rem] sm:right-7 sm:h-12 sm:w-12"
     >
       <span className="whatsapp-ping absolute inset-0 rounded-full border border-white/50" />
       <svg

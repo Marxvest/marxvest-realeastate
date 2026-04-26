@@ -199,3 +199,47 @@ export type PartnerRegistration = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type BuyerAccessDeliveryChannel = "email" | "whatsapp" | "manual";
+
+export type BuyerAccessLinkStatus =
+  | "active"
+  | "revoked"
+  | "expired"
+  | "used";
+
+export type BuyerAccessLink = {
+  id: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhoneFull: string;
+  buyerPhoneLast4: string;
+  estateName: string;
+  driveFolderId: string;
+  status: BuyerAccessLinkStatus;
+  deliveryChannel: BuyerAccessDeliveryChannel;
+  deliveryNote?: string;
+  paymentNote?: string;
+  expiresAt: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  lastAccessedAt?: string;
+  accessCount: number;
+};
+
+export type BuyerAccessAttemptStatus =
+  | "success"
+  | "failed_verification"
+  | "expired"
+  | "revoked"
+  | "invalid_token";
+
+export type BuyerAccessAttempt = {
+  id: string;
+  buyerAccessLinkId?: string;
+  attemptStatus: BuyerAccessAttemptStatus;
+  ipAddress?: string;
+  userAgent?: string;
+  createdAt: string;
+};

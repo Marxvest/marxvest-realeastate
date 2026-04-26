@@ -232,7 +232,7 @@ export default function HomePage() {
         <div className="hero-stage-overlay absolute inset-0" />
         <div className="hero-stage-glow absolute inset-0" />
 
-        <div className="relative z-10 mx-auto flex min-h-[80svh] w-[var(--page-width)] flex-col justify-start gap-[14px] pt-10 pb-5 sm:min-h-[calc(90svh-var(--sticky-shell-height))] sm:justify-between sm:gap-5 sm:pt-7 sm:pb-8 lg:min-h-[calc(100svh-var(--sticky-shell-height))] lg:pt-10 lg:pb-10">
+        <div className="relative z-10 mx-auto flex min-h-[80svh] w-[var(--page-width)] flex-col justify-start gap-3 pt-7 pb-4 sm:min-h-[calc(90svh-var(--sticky-shell-height))] sm:justify-between sm:gap-5 sm:pt-7 sm:pb-8 lg:min-h-[calc(100svh-var(--sticky-shell-height))] lg:pt-10 lg:pb-10">
           <div className="max-w-[35rem] pt-0 sm:block sm:min-h-0 sm:pt-2">
             <RevealOnScroll from="left" className="-mt-1 mb-6 sm:-mt-1 sm:mb-7">
               <div className="section-cap max-w-[92%] !text-[var(--brand-white)] before:!bg-white/48">
@@ -251,14 +251,14 @@ export default function HomePage() {
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={170}>
-              <p className="mt-8 max-w-[94%] text-[17px] font-normal leading-[1.58] text-white/90 sm:mt-8 sm:max-w-[26rem] sm:text-[0.95rem] sm:leading-7 sm:text-white/82">
+              <p className="mt-6 max-w-[94%] text-[17px] font-normal leading-[1.58] text-white/90 sm:mt-8 sm:max-w-[26rem] sm:text-[0.95rem] sm:leading-7 sm:text-white/82">
                 Compare trusted estates, check the documents, and buy with
                 guided support.
               </p>
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={220}>
-              <div className="mt-12 sm:mt-8">
+              <div className="mt-9 sm:mt-8">
                 <div className="grid gap-3 sm:hidden">
                   <Link
                     href="/listings"
@@ -292,7 +292,7 @@ export default function HomePage() {
             </RevealOnScroll>
 
             <RevealOnScroll from="up" delayMs={260}>
-              <div className="hero-proof-band mt-10 grid grid-cols-4 overflow-hidden rounded-[0.85rem] border border-white/8 sm:hidden">
+              <div className="hero-proof-band mt-7 grid grid-cols-4 overflow-hidden rounded-[0.85rem] border border-white/8 sm:hidden">
                 {heroTrustBadges.map((badge, index) => (
                   <div
                     key={badge.label}

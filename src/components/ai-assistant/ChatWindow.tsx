@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { House, SendHorizonal } from "lucide-react";
+import { House, SendHorizonal, X } from "lucide-react";
 
 import { ASSISTANT_NAME, WELCOME_MESSAGE } from "@/lib/ai-assistant/constants";
 import { sendAssistantMessage } from "@/lib/ai-assistant/chat-client";
@@ -48,6 +48,17 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, showLeadForm]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   async function sendMessage(rawMessage?: string) {
     const message = (rawMessage || input).trim();
@@ -99,6 +110,7 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
   return (
     <>
       <div
+        onClick={onClose}
         className="fixed inset-0 z-[75] bg-[rgba(7,18,45,0.18)] backdrop-blur-[2px] sm:bg-transparent sm:backdrop-blur-0"
         aria-hidden="true"
       />
@@ -126,10 +138,11 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-white/90 transition hover:bg-white/10"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-2 text-sm font-medium text-white/92 transition hover:bg-white/12 sm:px-3.5"
             aria-label="Close assistant"
           >
-            ×
+            <X className="h-4 w-4" />
+            <span className="hidden sm:inline">Close</span>
           </button>
         </header>
 

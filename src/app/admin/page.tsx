@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { buildNoIndexMetadata } from "@/lib/seo";
+import { getBuyerAccessSummary } from "@/lib/buyer-access";
 import { getSession } from "@/lib/auth";
 import { getFormSubmissionSummary } from "@/lib/form-submissions";
 import { auditEvents, homepageBanners, openInquiries } from "@/lib/site-data";
@@ -26,7 +27,13 @@ export default async function AdminPage() {
     partnerRegistrations: 0,
     configured: false,
   };
+  let buyerAccessSummary = {
+    activeLinks: 0,
+    totalLinks: 0,
+    configured: false,
+  };
   let submissionError = "";
+  let buyerAccessError = "";
 
   try {
     submissionSummary = await getFormSubmissionSummary();
@@ -35,6 +42,15 @@ export default async function AdminPage() {
       error instanceof Error
         ? error.message
         : "Unable to load form submission summary.";
+  }
+
+  try {
+    buyerAccessSummary = await getBuyerAccessSummary();
+  } catch (error) {
+    buyerAccessError =
+      error instanceof Error
+        ? error.message
+        : "Unable to load buyer access summary.";
   }
 
   return (
@@ -85,15 +101,39 @@ export default async function AdminPage() {
                   Review realtor and marketer onboarding entries.
                 </p>
               </Link>
+              <Link
+                href="/admin/buyer-access"
+                className="rounded-[1.4rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-5 py-5 transition hover:border-[var(--brand-primary)]"
+              >
+                <div className="text-sm uppercase tracking-[0.18em] text-[var(--brand-primary)]">
+                  Buyer access links
+                </div>
+                <div className="mt-3 text-3xl font-semibold text-[var(--brand-text)]">
+                  {buyerAccessSummary.activeLinks}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[var(--brand-text-muted)]">
+                  Manage secure Google Drive access links for confirmed buyers.
+                </p>
+              </Link>
             </div>
             {!submissionSummary.configured ? (
               <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
                 Supabase form storage is not configured. Website forms will not be accepted until the service role connection is available.
               </p>
             ) : null}
+            {!buyerAccessSummary.configured ? (
+              <p className="mt-3 text-sm leading-6 text-[var(--brand-danger)]">
+                Buyer access storage is not configured. Secure Drive links cannot be issued yet.
+              </p>
+            ) : null}
             {submissionError ? (
               <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
                 {submissionError}
+              </p>
+            ) : null}
+            {buyerAccessError ? (
+              <p className="mt-3 text-sm leading-6 text-[var(--brand-danger)]">
+                {buyerAccessError}
               </p>
             ) : null}
           </section>
