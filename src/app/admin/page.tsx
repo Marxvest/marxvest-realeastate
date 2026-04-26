@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { buildNoIndexMetadata } from "@/lib/seo";
 import { getBuyerAccessSummary } from "@/lib/buyer-access";
+import { getBuyerUploadSummary } from "@/lib/buyer-uploads";
 import { getSession } from "@/lib/auth";
 import { getFormSubmissionSummary } from "@/lib/form-submissions";
 import { auditEvents, homepageBanners, openInquiries } from "@/lib/site-data";
@@ -32,8 +33,14 @@ export default async function AdminPage() {
     totalLinks: 0,
     configured: false,
   };
+  let buyerUploadSummary = {
+    pendingUploads: 0,
+    totalUploads: 0,
+    configured: false,
+  };
   let submissionError = "";
   let buyerAccessError = "";
+  let buyerUploadError = "";
 
   try {
     submissionSummary = await getFormSubmissionSummary();
@@ -51,6 +58,15 @@ export default async function AdminPage() {
       error instanceof Error
         ? error.message
         : "Unable to load buyer access summary.";
+  }
+
+  try {
+    buyerUploadSummary = await getBuyerUploadSummary();
+  } catch (error) {
+    buyerUploadError =
+      error instanceof Error
+        ? error.message
+        : "Unable to load buyer upload summary.";
   }
 
   return (
@@ -115,6 +131,20 @@ export default async function AdminPage() {
                   Manage secure Google Drive access links for confirmed buyers.
                 </p>
               </Link>
+              <Link
+                href="/admin/buyer-uploads"
+                className="rounded-[1.4rem] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-5 py-5 transition hover:border-[var(--brand-primary)]"
+              >
+                <div className="text-sm uppercase tracking-[0.18em] text-[var(--brand-primary)]">
+                  Buyer uploads
+                </div>
+                <div className="mt-3 text-3xl font-semibold text-[var(--brand-text)]">
+                  {buyerUploadSummary.pendingUploads}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[var(--brand-text-muted)]">
+                  Review receipts, IDs, signed forms, and other buyer uploads.
+                </p>
+              </Link>
             </div>
             {!submissionSummary.configured ? (
               <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
@@ -126,6 +156,11 @@ export default async function AdminPage() {
                 Buyer access storage is not configured. Secure Drive links cannot be issued yet.
               </p>
             ) : null}
+            {!buyerUploadSummary.configured ? (
+              <p className="mt-3 text-sm leading-6 text-[var(--brand-danger)]">
+                Buyer uploads are not configured. Secure file submissions cannot be accepted yet.
+              </p>
+            ) : null}
             {submissionError ? (
               <p className="mt-5 text-sm leading-6 text-[var(--brand-danger)]">
                 {submissionError}
@@ -134,6 +169,11 @@ export default async function AdminPage() {
             {buyerAccessError ? (
               <p className="mt-3 text-sm leading-6 text-[var(--brand-danger)]">
                 {buyerAccessError}
+              </p>
+            ) : null}
+            {buyerUploadError ? (
+              <p className="mt-3 text-sm leading-6 text-[var(--brand-danger)]">
+                {buyerUploadError}
               </p>
             ) : null}
           </section>

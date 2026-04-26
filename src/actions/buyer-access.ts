@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { getSession } from "@/lib/auth";
+import { createBuyerAccessSession } from "@/lib/buyer-access-session";
 import {
   initialBuyerAccessActionState,
   type BuyerAccessActionState,
@@ -213,7 +214,8 @@ export async function verifyBuyerAccessAction(formData: FormData) {
   });
 
   if (result.ok) {
-    redirect(result.driveUrl);
+    await createBuyerAccessSession(token);
+    redirect(`/buyer-access/${encodeURIComponent(token)}`);
   }
 
   const errorMessage =

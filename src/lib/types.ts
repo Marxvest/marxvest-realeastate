@@ -243,3 +243,35 @@ export type BuyerAccessAttempt = {
   userAgent?: string;
   createdAt: string;
 };
+
+export type BuyerUploadCategory =
+  | "payment_receipt"
+  | "passport_photo"
+  | "government_id"
+  | "signed_document"
+  | "other";
+
+export type BuyerUploadReviewStatus = "pending" | "reviewed";
+export type BuyerUploadMirrorStatus = "pending" | "mirrored" | "failed";
+
+export type BuyerUpload = {
+  id: string;
+  buyerAccessLinkId: string;
+  buyerName: string;
+  buyerEmail: string;
+  fileName: string;
+  filePath: string;
+  fileType: string;
+  fileSize: number;
+  uploadCategory: BuyerUploadCategory;
+  note?: string;
+  reviewStatus: BuyerUploadReviewStatus;
+  mirrorStatus: BuyerUploadMirrorStatus;
+  googleDriveFileId?: string;
+  googleDriveFileUrl?: string;
+  mirroredAt?: string;
+  mirrorError?: string;
+  createdAt: string;
+  updatedAt: string;
+  signedUrl?: string;
+};
