@@ -57,8 +57,8 @@ export const siteConfig = {
   publisher: "Marxvest Real Estate",
   keywords: [...defaultKeywords],
   ogImage: {
-    src: "/images/marxvest-hero-image.webp",
-    alt: "Verified land estate entrance promoted by Marxvest Real Estate in Nigeria.",
+    src: "/images/gate-house-2.webp",
+    alt: "Premium gated estate entrance presented by Marxvest Real Estate in Nigeria.",
   },
   business: {
     phone: company.phone,

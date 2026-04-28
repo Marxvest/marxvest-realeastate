@@ -50,7 +50,7 @@ export function buildMetadata({
   const images = buildImages(image);
 
   return {
-    title,
+    title: title ? { absolute: fullTitle } : siteConfig.defaultTitle,
     description,
     keywords,
     authors: [...siteConfig.authors],
