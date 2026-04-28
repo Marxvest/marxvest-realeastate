@@ -22,6 +22,12 @@ export const defaultKeywords = [
 ] as const;
 
 function resolveSiteUrl() {
+  const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
+  if (vercelProductionUrl) {
+    return `https://${vercelProductionUrl}`;
+  }
+
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
 
   if (explicit) {
@@ -34,7 +40,7 @@ function resolveSiteUrl() {
     return `https://${vercelUrl}`;
   }
 
-  return "https://marxvest-realeastate.vercel.app";
+  return "https://marxvest.vercel.app";
 }
 
 export const siteConfig = {
